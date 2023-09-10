@@ -13,8 +13,8 @@ app.get('/', (req: Request, res: Response) => {
 });
 ///dd
 app.get('/test_endpoint', (req: Request, res: Response) => {
-  console.log('test check ppppp')
-  res.send('please work diff now pluss');
+  console.log('WORK')
+  res.send('please WORK');
 });
 
 
