@@ -1,8 +1,8 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response, Express } from 'express';
 import bodyParser from 'body-parser';
 
-const app = express();
-const port = 3333;
+export const app  = express();
+export const port = 3333;
 
 // Middleware to parse JSON requests
 app.use(bodyParser.json());
@@ -11,8 +11,20 @@ app.use(bodyParser.json());
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello, Express server with TypeScript!');
 });
+///dd
+app.get('/test_endpoint', (req: Request, res: Response) => {
+  console.log('test check')
+  res.send('please work diff now');
+});
+
+
+app.post('frontend_data_to_server',(req: Request, res: Response) => {
+  console.log(req)
+  res.send(req);
+})
 
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+

@@ -1,25 +1,36 @@
 import logo from './logo.svg';
 import './App.css';
+import axios from 'axios';
+
+const sendSpotifyDetailsToServer = async (inputValue) => {
+  // You can perform actions with inputValue here, such as sending it to a server
+
+try{  
+  const testGet = await axios.get('http://localhost:3333/test_endpoint')
+console.log(testGet);
+}
+catch(error){
+}
+
+}
 
 function App() {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const inputValue = e.target.querySelector('input').value;
+    sendSpotifyDetailsToServer(inputValue);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <form onSubmit={handleSubmit}> 
+        <input
+          type="text"
+          placeholder="Enter Spotify details"
+        />
+        <button type="submit">Search artist</button>
+      </form>
     </div>
   );
 }
-
 export default App;
