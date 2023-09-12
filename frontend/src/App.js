@@ -6,8 +6,12 @@ const sendSpotifyDetailsToServer = async (inputValue) => {
   // You can perform actions with inputValue here, such as sending it to a server
 
 try{  
-  const testGet = await axios.get('http://localhost:3333/test_endpoint')
-console.log(testGet);
+//   const testGet = await axios.get('http://localhost:3333/test_endpoint')
+// console.log(testGet);
+
+const POSTTest = await axios.post('http://localhost:3333/frontend_data_to_server',{inputValue},{})
+console.log(POSTTest)
+return POSTTest
 }
 catch(error){
 }

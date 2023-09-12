@@ -11,9 +11,9 @@ describe('Express Server', () => {
     expect(response.text).toBe('Hello, Express server with TypeScript!');
   });
 
-  it('frontend_data_to_server', async () => {
-    const response = await request(app).get('/frontend_data_to_server');
+  it('frontend_data_to_server POST request worked', async () => {
+    const response = await request(app).post('/frontend_data_to_server');
     expect(response.status).toBe(200);
-    expect(response.text).toBe('frontend_data');
+    expect(response.text).toBe('frontend_data_to_server POST request worked');
   });
 });
