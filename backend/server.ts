@@ -31,15 +31,17 @@ app.get('/test_endpoint', (req: Request, res: Response) => {
 
 
 app.post('/frontend_data_to_server', async (req: Request, res: Response) => {
+
+  console.log('req.body is;', req.body)
  
   const testDataSchemaOnBackEnd = new testDataSchema({testData : req.body?.inputValue});
  
   try{
-  console.log(req.body, 'test again')
+  console.log('testDataSchemaOnBackEnd is', testDataSchemaOnBackEnd)
 
   const saveToBackEnd = await testDataSchemaOnBackEnd.save()
-  console.log(saveToBackEnd)
-  res.send('frontend_data_to_server POST request worked');
+ 
+  res.send(saveToBackEnd);
 
  }
  catch(error){

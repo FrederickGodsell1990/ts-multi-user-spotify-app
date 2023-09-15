@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@shelf/jest-mongodb": "^4.1.7",
     "@types/cors": "^2.8.14",
     "@types/jest": "^29.5.4",
     "@types/node": "^20.5.9",
@@ -41,6 +42,7 @@
     ],
     "moduleNameMapper": {
       "^app/(.*)$": "<rootDir>/src/$1"
-    }
+    },
+    "preset": "@shelf/jest-mongodb"
   }
 }
