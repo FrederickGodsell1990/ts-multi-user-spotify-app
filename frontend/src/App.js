@@ -1,40 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
-import axios from 'axios';
-
-const sendSpotifyDetailsToServer = async (inputValue) => {
-  // You can perform actions with inputValue here, such as sending it to a server
-
-try{  
-//   const testGet = await axios.get('http://localhost:3333/test_endpoint')
-// console.log(testGet);
-
-const POSTTest = await axios.post('http://localhost:3333/frontend_data_to_server',{inputValue},{})
-console.log(POSTTest)
-return POSTTest
-}
-catch(error){
-}
-
-}
+import logo from "./logo.svg";
+import "./App.css";
+import axios from "axios";
+import React, { useState } from "react";
 
 function App() {
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const inputValue = e.target.querySelector('input').value;
-    sendSpotifyDetailsToServer(inputValue);
-  };
-
   return (
-    <div className="App">
-      <form onSubmit={handleSubmit}> 
-        <input
-          type="text"
-          placeholder="Enter Spotify details"
-        />
-        <button type="submit">Search artist</button>
-      </form>
-    </div>
+    <>
+      <div className="frontend_data_to_server">
+        <form
+          method="POST"
+          action="/frontend_data_to_server"
+        >
+          <input
+            type="text"
+            placeholder="Enter Spotify details"
+            name="testData"
+          />
+          <button type="submit">Search artist</button>
+        </form>
+      </div>
+
+      <div className="SpotifyLoginDetailsForm">
+        <form
+          method="POST"
+          action="http://localhost:3333/post_spotify_login_details"
+        >
+          <input type="text" placeholder="Client_ID" name="Client_ID" />
+          <input type="text" placeholder="Redirect_URI" name="Redirect_URI" />
+          <input
+            type="text"
+            placeholder="Release_Radar_code"
+            name="Release_Radar_code"
+          />
+          <button type="submit">Form - Submit login details</button>
+        </form>
+      </div>
+    </>
   );
 }
 export default App;

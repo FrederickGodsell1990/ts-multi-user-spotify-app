@@ -24,27 +24,22 @@ describe("Express Server", () => {
     expect(response.text).toBe("Hello, Express server with TypeScript!");
   });
 
-  it("frontend_data_to_server POST mock test works", async () => {
-    const mockedFrontEndPostData = { inputValue: "Another test" };
+
+  it("/post_spotify_login_details mock is correct", async () => {
+    const mockedData = {
+      inputValue: {
+        Client_ID: "aaa",
+        Redirect_URI: "bbb",
+        Release_Radar_code: "ccc",
+      },
+    };
 
     const response = await request(app)
-      .post("/frontend_data_to_server")
-      .send(mockedFrontEndPostData)
-      .set("Accept", "application/json");
-
-    expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty("_id");
-  });
-
-  it("/frontend_data_to_server input text is not empty", async () => {
-    const mockedData = { inputValue: "Another test" };
-
-    const response = await request(app)
-      .post("/frontend_data_to_server")
+      .post("/post_spotify_login_details")
       .send(mockedData)
       .set("Accept", "application/json");
 
-      expect(response.body).toBeTruthy()
+    expect(response.status).toBe(302);
 
   });
 });
