@@ -4,6 +4,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import testDataSchema from "./mongoDBModels/testSchema";
 import spotifyLoginSchema from "./mongoDBModels/spotifyLoginSchema";
+import SpotifySignUpSchema from "./mongoDBModels/spotifySignUpSchema";
 import querystring from "querystring";
 import axios from "axios";
 import { createProxyMiddleware } from "http-proxy-middleware";
@@ -32,11 +33,6 @@ app.use(cors());
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello, Express server with TypeScript!");
 });
-///dd
-app.get("/test_endpoint", (req: Request, res: Response) => {
-  console.log("change again");
-  res.send("change again");
-});
 
 app.post("/frontend_data_to_server", async (req: Request, res: Response) => {
   console.log("req.body is;", req.body);
@@ -46,8 +42,6 @@ app.post("/frontend_data_to_server", async (req: Request, res: Response) => {
   });
 
   try {
-    console.log("testDataSchemaOnBackEnd is", testDataSchemaOnBackEnd);
-
     const saveToBackEnd = await testDataSchemaOnBackEnd.save();
 
     res.send(saveToBackEnd);
@@ -55,7 +49,6 @@ app.post("/frontend_data_to_server", async (req: Request, res: Response) => {
     console.log(error);
   }
 });
-
 
 app.post("/post_spotify_login_details", async (req: Request, res: Response) => {
   const generateRandomString = (length: number) => {
@@ -68,48 +61,64 @@ app.post("/post_spotify_login_details", async (req: Request, res: Response) => {
     return text;
   };
 
-  const state = generateRandomString(16);
+  const state: string = generateRandomString(16);
 
-  const scope =
+  const scope: string =
     "user-read-private user-read-email user-follow-modify user-follow-read user-top-read playlist-modify-public playlist-modify-private";
 
-  const stateKey = "spotify_auth_state";
+  const stateKey: string = "spotify_auth_state";
   res.cookie(stateKey, state);
 
   const queryParams = {
-    client_id: req.body?.Client_ID,
+    client_id: req.body?.Client_ID as string,
     response_type: "code",
-    redirect_uri: req.body?.Redirect_URI,
-    state: state,
-    scope: scope,
+    redirect_uri: req.body?.Redirect_URI as string,
+    state,
+    scope,
   };
 
-  const queryParamsString = querystring.stringify(queryParams);
+  const queryParamsString: string = querystring.stringify(queryParams);
 
-  console.log("queryParams is", queryParams);
-
-  const authorizationUrl = `https://accounts.spotify.com/authorize?${queryParamsString}`;
+  const authorizationUrl: string = `https://accounts.spotify.com/authorize?${queryParamsString}`;
 
   console.log("authorizationUrl is", authorizationUrl);
 
   res.redirect(authorizationUrl);
 });
 
+app.post("/sign_up", async (req: Request, res: Response) => {
+
+  const {Client_ID, Redirect_URI,Release_Radar_code } = await req.body;
+
+  console.log('Client_ID is', Client_ID, 'Redirect_URI', Redirect_URI, 'Release_Radar_code', Release_Radar_code )
+
+  try{
+ const saveSpotifySignUpDetailToDatabase = new SpotifySignUpSchema({
+  Client_ID: req.body?.Client_ID,
+  Redirect_URI: req.body?.Redirect_URI,
+  Release_Radar_code: req.body?.Release_Radar_code 
+ })
+ 
+ const postDetailsToDatabase = await saveSpotifySignUpDetailToDatabase.save()
+
+
+  res.status(201).json({
+    message: "Account created sucessfully",
+    postDetailsToDatabase: postDetailsToDatabase,
+  });
+}
+catch(error){
+  console.log(error)
+}
+
+
+
+});
+
 app.get("/spotify_login_callback", async (req: Request, res: Response) => {
   console.log("spotify_login_callback HIT UUPP");
   res.end();
 });
-
-app.get("/testget", async (req: Request, res: Response) => {
-  res.redirect(
-    "https://accounts.spotify.com/en/authorize?client_id=93df828bbcc848da91f1fcf931fd40a4&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3333%2Fspotify_login_callback&state=t1HYKmK9tYACuGsA&scope=user-read-private%20user-read-email%20user-follow-modify%20user-follow-read%20user-top-read%20playlist-modify-public%20playlist-modify-private"
-  );
-});
-
-// // Start the server
-// app.listen(port, () => {
-//   console.log(`Server is running on http://localhost:${port}`);
-// });
 
 mongoose
   .connect(
