@@ -87,32 +87,93 @@ app.post("/post_spotify_login_details", async (req: Request, res: Response) => {
 });
 
 app.post("/sign_up", async (req: Request, res: Response) => {
+  const { Client_ID, Redirect_URI, Release_Radar_code, signup } =
+    await req.body;
 
-  const {Client_ID, Redirect_URI,Release_Radar_code } = await req.body;
+  console.log(
+    "Client_ID is",
+    Client_ID,
+    "Redirect_URI",
+    Redirect_URI,
+    "Release_Radar_code",
+    Release_Radar_code,
+    "signup present",
+    signup
+  );
 
-  console.log('Client_ID is', Client_ID, 'Redirect_URI', Redirect_URI, 'Release_Radar_code', Release_Radar_code )
+  try {
+    const saveSpotifySignUpDetailToDatabase = new SpotifySignUpSchema({
+      Client_ID: req.body?.Client_ID,
+      Redirect_URI: req.body?.Redirect_URI,
+      Release_Radar_code: req.body?.Release_Radar_code,
+    });
 
-  try{
- const saveSpotifySignUpDetailToDatabase = new SpotifySignUpSchema({
-  Client_ID: req.body?.Client_ID,
-  Redirect_URI: req.body?.Redirect_URI,
-  Release_Radar_code: req.body?.Release_Radar_code 
- })
- 
- const postDetailsToDatabase = await saveSpotifySignUpDetailToDatabase.save()
+    const postDetailsToDatabase =
+      await saveSpotifySignUpDetailToDatabase.save();
 
+    res.status(201).json({
+      message: "Account created sucessfully",
+      postDetailsToDatabase: postDetailsToDatabase,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
 
-  res.status(201).json({
-    message: "Account created sucessfully",
-    postDetailsToDatabase: postDetailsToDatabase,
-  });
-}
-catch(error){
-  console.log(error)
-}
+app.post("/log_in_and_sign_up", async (req: Request, res: Response) => {
+  const { Client_ID, Redirect_URI, Release_Radar_code, Username, signup } =
+    await req.body;
+// indicates that the post request is a first time sign up
+  if (Username && Client_ID && Redirect_URI && Release_Radar_code && signup) {
+    (async function checkForDuplicateAccount() {
+      const checkForExistingAccounts = await SpotifySignUpSchema.findOne({
+        Client_ID: Client_ID,
+      });
 
+      console.log(checkForExistingAccounts, 'typeof = ', typeof checkForExistingAccounts)
 
+      if (checkForExistingAccounts ) {
+        res.redirect(
+          'http://localhost:3000/account_already_exists'
+        );
+      }
 
+     
+    })();
+
+    try {
+      const saveSpotifySignUpDetailToDatabase = new SpotifySignUpSchema({
+        Client_ID: req.body?.Client_ID,
+        Redirect_URI: req.body?.Redirect_URI,
+        Release_Radar_code: req.body?.Release_Radar_code,
+        Username : req.body?.Username
+      });
+
+      const postDetailsToDatabase =
+        await saveSpotifySignUpDetailToDatabase.save();
+
+      (async function getUserInfo() {
+        const userAcccountDetails = await SpotifySignUpSchema.findOne({
+          Client_ID: Client_ID,
+        });
+
+        if (userAcccountDetails) {
+          res.redirect(
+            'http://localhost:3000/account_creation_successful'
+          );
+        }
+      })();
+
+      // res.status(201).json({
+      //   message: "Account created sucessfully",
+      //   postDetailsToDatabase: postDetailsToDatabase,
+      // });
+
+      // redirect to the unique environment of the user
+    } catch (error) {
+      console.log(error);
+    }
+  }
 });
 
 app.get("/spotify_login_callback", async (req: Request, res: Response) => {

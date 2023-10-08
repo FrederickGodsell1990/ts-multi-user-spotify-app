@@ -14,6 +14,10 @@ const SpotifySignUpSchema = new Schema({
     Release_Radar_code: {
         type : String ,
         required : true
+    },
+    Username: {
+        type : String ,
+        required : true
     }
 })
 

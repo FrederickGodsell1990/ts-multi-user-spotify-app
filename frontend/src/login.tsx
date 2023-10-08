@@ -1,46 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useLocation } from 'react-router-dom';
+
 
 function Login() {
   const [Client_ID, setClientID] = useState("");
   const [Redirect_URI, setRedirectURI] = useState("");
   const [Release_Radar_code, setReleaseRadarCode] = useState("");
+  const [Username, setUsername] = useState("");
+  const [signUp, setSignUp] = useState(false);
 
-  const handleSubmit = async (event) => {
-    // verifies all form inputs are present
-    if (Client_ID && Redirect_URI && Release_Radar_code) {
-      // Input details as object to send via axios
-      const signUpDetailsObject = {
-        Client_ID,
-        Redirect_URI,
-        Release_Radar_code,
-      };
+  // const location = useLocation();
+  // const message = new URLSearchParams(location.search).get('message');
 
-      try {
-        const response = await axios.post(
-          "http://localhost:3333/sign_up",
-          signUpDetailsObject,
-          {
-            headers: {
-              "Content-Type": "application/json", 
-            },
-          }
-        );
+  // useEffect(() => {
+  //   if (message) {
+  //     alert(message); // Display the message using an alert or other UI element
+  //   }
+  // }, [message]);
 
-        // Handle the successful response here
-        console.log("Axios response:", response);
-        // You can perform further actions based on the response if needed
-      } catch (error) {
-        // Handle errors here
-        console.error("Axios error:", error);
-      }
-    } else {
-      // Not all fields are completed, show an error message or take appropriate action
-      alert("Please complete all fields.");
-      event.preventDefault(); // Prevent form submission when fields are not complete
-    }
-  };
-
+ 
   return (
     <>
       <div>Login</div>
@@ -76,13 +55,17 @@ function Login() {
         <form
           method="POST"
           action="http://localhost:3333/sign_up"
+
           // onSubmit={handleSubmit}
         >
           <input
             type="text"
             placeholder="Client_ID"
             name="Client_ID"
-            onChange={(e) => setClientID(e.target.value)}
+            onChange={(e) => {
+              setClientID(e.target.value);
+              setSignUp((signUp) => true);
+            }}
           />
           <input
             type="text"
@@ -96,7 +79,50 @@ function Login() {
             name="Release_Radar_code"
             onChange={(e) => setReleaseRadarCode(e.target.value)}
           />
+          <input type="hidden" name="signup" value="signup" />
+
           <button type="submit">Sign up - Submit login details</button>
+        </form>
+      </div>
+
+      <div className="RegisterAccount">
+        Sign up & log in
+        <form
+          method="POST"
+          action="http://localhost:3333/log_in_and_sign_up"
+        
+        >
+          <input
+            type="text"
+            placeholder="Username"
+            name="Username"
+            onChange={(e) => {
+              setUsername(e.target.value)
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Client_ID"
+            name="Client_ID"
+            onChange={(e) => {
+              setClientID(e.target.value)
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Redirect_URI"
+            name="Redirect_URI"
+            onChange={(e) => setRedirectURI(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Release_Radar_code"
+            name="Release_Radar_code"
+            onChange={(e) => setReleaseRadarCode(e.target.value)}
+          />
+          <input type="hidden" name="signup" value="signup" />
+
+          <button type="submit">Log in & sign up - Submit login details</button>
         </form>
       </div>
     </>
