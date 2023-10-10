@@ -10,14 +10,6 @@ function Login() {
   const [Username, setUsername] = useState("");
   const [signUp, setSignUp] = useState(false);
 
-  // const location = useLocation();
-  // const message = new URLSearchParams(location.search).get('message');
-
-  // useEffect(() => {
-  //   if (message) {
-  //     alert(message); // Display the message using an alert or other UI element
-  //   }
-  // }, [message]);
 
  
   return (
@@ -55,8 +47,6 @@ function Login() {
         <form
           method="POST"
           action="http://localhost:3333/sign_up"
-
-          // onSubmit={handleSubmit}
         >
           <input
             type="text"
@@ -123,6 +113,35 @@ function Login() {
           <input type="hidden" name="signup" value="signup" />
 
           <button type="submit">Log in & sign up - Submit login details</button>
+        </form>
+      </div>
+
+      <div className="RegisterAccount">
+       Login New
+        <form
+          method="POST"
+          action="http://localhost:3333/log_in"
+        
+        >
+          <input
+            type="text"
+            placeholder="Username"
+            name="Username"
+            onChange={(e) => {
+              setUsername(e.target.value)
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Client_ID"
+            name="Client_ID"
+            onChange={(e) => {
+              setClientID(e.target.value)
+            }}
+          />
+    
+
+          <button type="submit">Login in new</button>
         </form>
       </div>
     </>

@@ -33,5 +33,35 @@ export const AccountAlreadyExists = () => {
   )
 };
 
+export const LoginFailed = () => {
 
+  const navigate = useNavigate();
+
+  const navigateToLoginPage = () => {
+      navigate("/");
+    };
+
+return (
+  <>
+   <div>Login failed - no account exists with those credentials </div>;
+   <button onClick={navigateToLoginPage}> To Login page</button>
+  </>
+)
+};
+
+export const WrongUsername= () => {
+
+  const navigate = useNavigate();
+
+  const navigateToLoginPage = () => {
+      navigate("/");
+    };
+
+return (
+  <>
+   <div>Login failed - account exists with that client secret but that username does not match </div>;
+   <button onClick={navigateToLoginPage}> To Login page</button>
+  </>
+)
+};
 
