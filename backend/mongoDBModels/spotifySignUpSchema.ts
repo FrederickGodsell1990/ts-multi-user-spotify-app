@@ -18,6 +18,10 @@ const SpotifySignUpSchema = new Schema({
     Username: {
         type : String ,
         required : true
+    },
+    Client_Secret: {
+        type : String ,
+        required : true
     }
 })
 

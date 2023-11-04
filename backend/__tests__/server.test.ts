@@ -25,21 +25,6 @@ describe("Express Server", () => {
   });
 
 
-  it("/post_spotify_login_details mock is correct", async () => {
-    const mockedData = {
-      inputValue: {
-        Client_ID: "aaa",
-        Redirect_URI: "bbb",
-        Release_Radar_code: "ccc",
-      },
-    };
 
-    const response = await request(app)
-      .post("/post_spotify_login_details")
-      .send(mockedData)
-      .set("Accept", "application/json");
-
-    expect(response.status).toBe(302);
-
-  });
+ 
 });

@@ -3,7 +3,6 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import mongoose from "mongoose";
 import testDataSchema from "./mongoDBModels/testSchema";
-import spotifyLoginSchema from "./mongoDBModels/spotifyLoginSchema";
 import SpotifySignUpSchema from "./mongoDBModels/spotifySignUpSchema";
 import querystring from "querystring";
 import axios from "axios";
@@ -11,35 +10,14 @@ import { createProxyMiddleware } from "http-proxy-middleware";
 
 
 
-// FG
-// _id
-// 6525a900b58aa0b781487390
-// Client_ID
-// "93df828bbcc848da91f1fcf931fd40a4"
-// Redirect_URI
-// "http://localhost:3333/spotify_login_callback"
-// Release_Radar_code
-// "37i9dQZEVXbpTERBYDw7WM"
-// Username
-// "Frederico"
-// __v
-// 0
-
-// // EC _id
-// 6525a858b58aa0b78148738c
-// Client_ID
-// "a3d31807124d40248f802fbbdaca4476"
-// Redirect_URI
-// "http://localhost:3333/spotify_login_callback"
-// Release_Radar_code
-// "37i9dQZEVXbftpojYxNDUm"
-// Username
-// "Ellen"
-// __v
-// 0
-
 export const app = express();
-export const port = 3333;
+
+
+export const port = process.env.NODE_ENV === "test" ? getRandomPort() : 3333;
+
+function getRandomPort() {
+  return Math.floor(Math.random() * (5000 - 3000) + 3000);
+}
 
 // bodyParser with extended : false needed to receive form data
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -57,6 +35,7 @@ app.use((req, res, next) => {
 });
 
 app.use(cors());
+
 
 // Sample route
 app.get("/", (req: Request, res: Response) => {
@@ -79,203 +58,147 @@ app.post("/frontend_data_to_server", async (req: Request, res: Response) => {
   }
 });
 
-app.post("/post_spotify_login_details", async (req: Request, res: Response) => {
-  const generateRandomString = (length: number) => {
-    let text = "";
-    const possible =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    for (let i = 0; i < length; i++) {
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-    return text;
-  };
 
-  const state: string = generateRandomString(16);
 
-  const scope: string =
-    "user-read-private user-read-email user-follow-modify user-follow-read user-top-read playlist-modify-public playlist-modify-private";
-
-  const stateKey: string = "spotify_auth_state";
-  res.cookie(stateKey, state);
-
-  const queryParams = {
-    client_id: req.body?.Client_ID as string,
-    response_type: "code",
-    redirect_uri: req.body?.Redirect_URI as string,
-    state,
-    scope,
-  };
-
-  const queryParamsString: string = querystring.stringify(queryParams);
-
-  const authorizationUrl: string = `https://accounts.spotify.com/authorize?${queryParamsString}`;
-
-  console.log("authorizationUrl is", authorizationUrl);
-
-  res.redirect(authorizationUrl);
-});
 
 app.post("/sign_up", async (req: Request, res: Response) => {
-  const { Client_ID, Redirect_URI, Release_Radar_code, signup } =
-    await req.body;
-
-  console.log(
-    "Client_ID is",
+  const {
     Client_ID,
-    "Redirect_URI",
     Redirect_URI,
-    "Release_Radar_code",
     Release_Radar_code,
-    "signup present",
-    signup
-  );
-
-  try {
-    const saveSpotifySignUpDetailToDatabase = new SpotifySignUpSchema({
-      Client_ID: req.body?.Client_ID,
-      Redirect_URI: req.body?.Redirect_URI,
-      Release_Radar_code: req.body?.Release_Radar_code,
-    });
-
-    const postDetailsToDatabase =
-      await saveSpotifySignUpDetailToDatabase.save();
-
-    res.status(201).json({
-      message: "Account created sucessfully",
-      postDetailsToDatabase: postDetailsToDatabase,
-    });
-  } catch (error) {
-    console.log(error);
-  }
-});
-
-app.post("/log_in_and_sign_up", async (req: Request, res: Response) => {
-  const { Client_ID, Redirect_URI, Release_Radar_code, Username, signup } =
-    await req.body;
+    Username,
+    signup,
+    Client_Secret,
+  } = await req.body;
   // indicates that the post request is a first time sign up
-  if (Username && Client_ID && Redirect_URI && Release_Radar_code && signup) {
+
+ 
+  if (
+    Username &&
+    Client_ID &&
+    Redirect_URI &&
+    Release_Radar_code &&
+    signup &&
+    Client_Secret
+  ) {
     (async function checkForDuplicateAccount() {
       const checkForExistingAccounts = await SpotifySignUpSchema.findOne({
         Client_ID: Client_ID,
       });
 
-      console.log(
-        checkForExistingAccounts,
-        "typeof = ",
-        typeof checkForExistingAccounts
-      );
-
       if (checkForExistingAccounts) {
         res.redirect("http://localhost:3000/account_already_exists");
+      } else if (!checkForExistingAccounts) {
+        try {
+          const saveSpotifySignUpDetailToDatabase = new SpotifySignUpSchema({
+            Client_ID: req.body?.Client_ID,
+            Redirect_URI: req.body?.Redirect_URI,
+            Release_Radar_code: req.body?.Release_Radar_code,
+            Username: req.body?.Username,
+            Client_Secret: req.body?.Client_Secret,
+          });
+
+          const postDetailsToDatabase =
+            await saveSpotifySignUpDetailToDatabase.save();
+
+
+          postDetailsToDatabase;
+
+          res.redirect("http://localhost:3000/account_creation_successful");
+        } catch (error) {
+          console.log(error);
+        }
       }
     })();
+  } else {
+    // Handle the case where one of the required variables is missing
+    res.status(400).send("One or more required fields are missing");
+  }
+  
+});
 
-    try {
-      const saveSpotifySignUpDetailToDatabase = new SpotifySignUpSchema({
-        Client_ID: req.body?.Client_ID,
-        Redirect_URI: req.body?.Redirect_URI,
-        Release_Radar_code: req.body?.Release_Radar_code,
-        Username: req.body?.Username,
-      });
+export const logInRoute = app.post(
+  "/log_in",
+  async (req: Request, res: Response) => {
 
-      const postDetailsToDatabase =
-        await saveSpotifySignUpDetailToDatabase.save();
 
-      postDetailsToDatabase;
+//     const reqBody = await req?.body;
+// console.log('reqbdy in server ', reqBody)
 
-      (async function getUserInfo() {
-        const userAcccountDetails = await SpotifySignUpSchema.findOne({
-          Client_ID: Client_ID,
-        });
+    const { Client_ID, Username } = await req?.body;
 
-        if (userAcccountDetails) {
-          res.redirect("http://localhost:3000/account_creation_successful");
+    const userAcccountDetails = await SpotifySignUpSchema.findOne({
+      Client_ID: Client_ID,
+    });
+
+    if (userAcccountDetails && userAcccountDetails.Username !== Username) {
+      res.send("Usernames do not match");
+    } else if (
+      userAcccountDetails &&
+      userAcccountDetails.Username === Username
+    ) {
+      //// to next 4 slashes it copied from /post_spotify_login_details
+
+      const generateRandomString = (length: number) => {
+        let text = "";
+        const possible =
+          "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        for (let i = 0; i < length; i++) {
+          text += possible.charAt(Math.floor(Math.random() * possible.length));
         }
-      })();
+        return text;
+      };
 
-      // redirect to the unique environment of the user
-    } catch (error) {
-      console.log(error);
+      const state: string = generateRandomString(16);
+
+      const scope: string =
+        "user-read-private user-read-email user-follow-modify user-follow-read user-top-read playlist-modify-public playlist-modify-private";
+
+      const stateKey: string = "spotify_auth_state";
+      res.cookie(stateKey, state);
+
+      // REMEBER TO CHANGE THE REDIRECT URI WHEN YOU PUSH TO PRODUCTION
+      const queryParams = {
+        client_id: Client_ID as string,
+        response_type: "code",
+        // redirect_uri: req.body?.Redirect_URI as string,
+        redirect_uri: "http://localhost:3333/spotify_login_callback",
+        state,
+        scope,
+      };
+
+      const queryParamsString: string = querystring.stringify(queryParams);
+
+      const authorizationUrl: string = `https://accounts.spotify.com/authorize?${queryParamsString}`;
+
+      res.redirect(authorizationUrl);
+    } else if (!userAcccountDetails) {
+      res.redirect("http://localhost:3000/no_existing_account");
     }
   }
-});
-
-app.post("/log_in", async (req: Request, res: Response) => {
-  const { Client_ID, Username } = await req?.body;
-
-  const userAcccountDetails = await SpotifySignUpSchema.findOne({
-    Client_ID: Client_ID,
-  });
-
-  if (userAcccountDetails) {
-    if (userAcccountDetails.Username !== Username) {
-      res.send("Usernames do not match ");
-    }
-
-    //// to next 4 slashes it copied from /post_spotify_login_details
- 
-
-    const generateRandomString = (length: number) => {
-      let text = "";
-      const possible =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-      for (let i = 0; i < length; i++) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-      }
-      return text;
-    };
-  
-    const state: string = generateRandomString(16);
-  
-    const scope: string =
-      "user-read-private user-read-email user-follow-modify user-follow-read user-top-read playlist-modify-public playlist-modify-private";
-  
-    const stateKey: string = "spotify_auth_state";
-    res.cookie(stateKey, state);
-  
-   // REMEBER TO CHANGE THE REDIRECT URI WHEN YOU PUSH TO PRODUCTION
-    const queryParams = {
-      client_id: Client_ID as string,
-      response_type: "code",
-      // redirect_uri: req.body?.Redirect_URI as string,
-      redirect_uri: 'http://localhost:3333/spotify_login_callback',
-      state,
-      scope,
-    };
-  
-    const queryParamsString: string = querystring.stringify(queryParams);
-  
-    const authorizationUrl: string = `https://accounts.spotify.com/authorize?${queryParamsString}`;
-  
-    console.log("authorizationUrl is", authorizationUrl);
-  
-    res.redirect(authorizationUrl);
-
-      //// from 4 slashes it copied from /post_spotify_login_details
-// // greyed out for timebeing
-//       res.send("if positive");
-  }
-
-  if (!userAcccountDetails) {
-    res.redirect("http://localhost:3000/no_existing_account");
-  }
-
-
-});
+);
 
 app.get("/spotify_login_callback", async (req: Request, res: Response) => {
   console.log("spotify_login_callback HIT UUPP");
   res.end();
 });
 
-mongoose
-  .connect(
-    "mongodb+srv://frederickgodsell:Fs6pIF2Evt64PUs1@multiuserspotifyapp.fxm38gv.mongodb.net/?retryWrites=true&w=majority",
-    {}
-  )
-  .then((result) => {
-    app.listen(port);
-    console.log("Mongo listening");
-    console.log(`Server is running on http://localhost:${port}`);
-  })
-  .catch((err) => console.log("err", err));
+
+
+export const server = mongoose
+.connect(
+  "mongodb+srv://frederickgodsell:Fs6pIF2Evt64PUs1@multiuserspotifyapp.fxm38gv.mongodb.net/?retryWrites=true&w=majority",
+  {}
+)
+.then((result) => {
+  app.listen(port);
+  console.log("Mongo listening");
+  console.log(`Server is running on http://localhost:${port}`);
+})
+.catch((err) => console.log("err", err));
+
+
+mongoose;
+
+
+ 

@@ -1,61 +1,47 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { useLocation } from 'react-router-dom';
+import React, { useState } from "react";
 
+import { useLocation } from "react-router-dom";
 
 function Login() {
   const [Client_ID, setClientID] = useState("");
   const [Redirect_URI, setRedirectURI] = useState("");
   const [Release_Radar_code, setReleaseRadarCode] = useState("");
   const [Username, setUsername] = useState("");
+  const [Client_Secret, setClientSecret] = useState("");
   const [signUp, setSignUp] = useState(false);
 
-
- 
   return (
     <>
-      <div>Login</div>
-      <div className="frontend_data_to_server">
-        <form method="POST" action="/frontend_data_to_server">
-          <input
-            type="text"
-            placeholder="Enter Spotify details"
-            name="testData"
-          />
-          <button type="submit">Search artist</button>
-        </form>
-      </div>
-
-      <div className="SpotifyLoginDetailsForm">
-        <form
-          method="POST"
-          action="http://localhost:3333/post_spotify_login_details"
-        >
-          <input type="text" placeholder="Client_ID" name="Client_ID" />
-          <input type="text" placeholder="Redirect_URI" name="Redirect_URI" />
-          <input
-            type="text"
-            placeholder="Release_Radar_code"
-            name="Release_Radar_code"
-          />
-          <button type="submit">Form - Submit login details</button>
-        </form>
-      </div>
+     
 
       <div className="RegisterAccount">
-        Sign up
-        <form
-          method="POST"
-          action="http://localhost:3333/sign_up"
-        >
+        Sign up & log in
+
+   
+
+        <form method="POST" action="http://localhost:3333/sign_up">
+
+          <input
+            type="text"
+            placeholder="Username"
+            name="Username"
+            onChange={(e) => {
+              setUsername(e.target.value);
+            }}
+          />
           <input
             type="text"
             placeholder="Client_ID"
             name="Client_ID"
             onChange={(e) => {
               setClientID(e.target.value);
-              setSignUp((signUp) => true);
             }}
+          />
+           <input
+            type="text"
+            placeholder="Client_Secret"
+            name="Client_Secret"
+            onChange={(e) => setReleaseRadarCode(e.target.value)}
           />
           <input
             type="text"
@@ -63,53 +49,15 @@ function Login() {
             name="Redirect_URI"
             onChange={(e) => setRedirectURI(e.target.value)}
           />
+
           <input
             type="text"
             placeholder="Release_Radar_code"
             name="Release_Radar_code"
             onChange={(e) => setReleaseRadarCode(e.target.value)}
           />
-          <input type="hidden" name="signup" value="signup" />
 
-          <button type="submit">Sign up - Submit login details</button>
-        </form>
-      </div>
-
-      <div className="RegisterAccount">
-        Sign up & log in
-        <form
-          method="POST"
-          action="http://localhost:3333/log_in_and_sign_up"
-        
-        >
-          <input
-            type="text"
-            placeholder="Username"
-            name="Username"
-            onChange={(e) => {
-              setUsername(e.target.value)
-            }}
-          />
-          <input
-            type="text"
-            placeholder="Client_ID"
-            name="Client_ID"
-            onChange={(e) => {
-              setClientID(e.target.value)
-            }}
-          />
-          <input
-            type="text"
-            placeholder="Redirect_URI"
-            name="Redirect_URI"
-            onChange={(e) => setRedirectURI(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Release_Radar_code"
-            name="Release_Radar_code"
-            onChange={(e) => setReleaseRadarCode(e.target.value)}
-          />
+         
           <input type="hidden" name="signup" value="signup" />
 
           <button type="submit">Log in & sign up - Submit login details</button>
@@ -117,18 +65,14 @@ function Login() {
       </div>
 
       <div className="RegisterAccount">
-       Login New
-        <form
-          method="POST"
-          action="http://localhost:3333/log_in"
-        
-        >
+        Login New
+        <form method="POST" action="http://localhost:3333/log_in">
           <input
             type="text"
             placeholder="Username"
             name="Username"
             onChange={(e) => {
-              setUsername(e.target.value)
+              setUsername(e.target.value);
             }}
           />
           <input
@@ -136,10 +80,9 @@ function Login() {
             placeholder="Client_ID"
             name="Client_ID"
             onChange={(e) => {
-              setClientID(e.target.value)
+              setClientSecret(e.target.value);
             }}
           />
-    
 
           <button type="submit">Login in new</button>
         </form>
