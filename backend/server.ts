@@ -8,10 +8,7 @@ import querystring from "querystring";
 import axios from "axios";
 import { createProxyMiddleware } from "http-proxy-middleware";
 
-
-
 export const app = express();
-
 
 export const port = process.env.NODE_ENV === "test" ? getRandomPort() : 3333;
 
@@ -36,7 +33,6 @@ app.use((req, res, next) => {
 
 app.use(cors());
 
-
 // Sample route
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello, Express server with TypeScript!");
@@ -58,9 +54,6 @@ app.post("/frontend_data_to_server", async (req: Request, res: Response) => {
   }
 });
 
-
-
-
 app.post("/sign_up", async (req: Request, res: Response) => {
   const {
     Client_ID,
@@ -72,7 +65,6 @@ app.post("/sign_up", async (req: Request, res: Response) => {
   } = await req.body;
   // indicates that the post request is a first time sign up
 
- 
   if (
     Username &&
     Client_ID &&
@@ -101,7 +93,6 @@ app.post("/sign_up", async (req: Request, res: Response) => {
           const postDetailsToDatabase =
             await saveSpotifySignUpDetailToDatabase.save();
 
-
           postDetailsToDatabase;
 
           res.redirect("http://localhost:3000/account_creation_successful");
@@ -114,18 +105,18 @@ app.post("/sign_up", async (req: Request, res: Response) => {
     // Handle the case where one of the required variables is missing
     res.status(400).send("One or more required fields are missing");
   }
-  
 });
+
+// client ID global here to be accessed by other route handlers
+export let GlobalClientID: String;
 
 export const logInRoute = app.post(
   "/log_in",
   async (req: Request, res: Response) => {
-
-
-//     const reqBody = await req?.body;
-// console.log('reqbdy in server ', reqBody)
-
     const { Client_ID, Username } = await req?.body;
+
+    // assigning GlobalClientID an actual value here. It will only be changed if a different person signs in
+    GlobalClientID = Client_ID;
 
     const userAcccountDetails = await SpotifySignUpSchema.findOne({
       Client_ID: Client_ID,
@@ -179,6 +170,52 @@ export const logInRoute = app.post(
 );
 
 app.get("/spotify_login_callback", async (req: Request, res: Response) => {
+  
+  
+
+  let userAccountDetails = await SpotifySignUpSchema.findOne({
+    Client_ID: GlobalClientID,
+  });
+
+
+
+  if (userAccountDetails) {
+    // Destructure the properties using the SpotifySignUpDocument type
+    const {
+      Redirect_URI,
+      Client_ID,
+      Release_Radar_code,
+      Username,
+      Client_Secret,
+    } = userAccountDetails;
+
+    const code = (req.query.code as string) || "";
+
+    const authVariable: string = `Basic ${Buffer.from(
+      `${Client_ID}:${Client_Secret}`
+    ).toString("base64")}`;
+
+    try {
+      const response = await axios({
+        method: "post",
+        url: "https://accounts.spotify.com/api/token",
+        data: querystring.stringify({
+          grant_type: "authorization_code",
+          code: code,
+          redirect_uri: Redirect_URI,
+        }),
+        headers: {
+          "content-type": "application/x-www-form-urlencoded",
+          Authorization: authVariable,
+        },
+      });
+
+      // console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   console.log("spotify_login_callback HIT UUPP");
   res.end();
 });
@@ -186,19 +223,15 @@ app.get("/spotify_login_callback", async (req: Request, res: Response) => {
 
 
 export const server = mongoose
-.connect(
-  "mongodb+srv://frederickgodsell:Fs6pIF2Evt64PUs1@multiuserspotifyapp.fxm38gv.mongodb.net/?retryWrites=true&w=majority",
-  {}
-)
-.then((result) => {
-  app.listen(port);
-  console.log("Mongo listening");
-  console.log(`Server is running on http://localhost:${port}`);
-})
-.catch((err) => console.log("err", err));
-
+  .connect(
+    "mongodb+srv://frederickgodsell:Fs6pIF2Evt64PUs1@multiuserspotifyapp.fxm38gv.mongodb.net/?retryWrites=true&w=majority",
+    {}
+  )
+  .then((result) => {
+    app.listen(port);
+    console.log("Mongo listening");
+    console.log(`Server is running on http://localhost:${port}`);
+  })
+  .catch((err) => console.log("err", err));
 
 mongoose;
-
-
- 
