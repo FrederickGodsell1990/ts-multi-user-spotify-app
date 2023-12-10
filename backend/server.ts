@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 import testDataSchema from "./mongoDBModels/testSchema";
 import SpotifySignUpSchema from "./mongoDBModels/spotifySignUpSchema";
 import querystring from "querystring";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { createProxyMiddleware } from "http-proxy-middleware";
 
 export const app = express();
@@ -169,15 +169,43 @@ export const logInRoute = app.post(
   }
 );
 
-app.get("/spotify_login_callback", async (req: Request, res: Response) => {
-  
-  
+// function to authorise Spotify seperate for testing
+export const spotifyAuthAxiosPostRequst = async (
+  Client_ID: string,
+  Client_Secret: string,
+  Redirect_URI: string,
+  code: string
+) => {
+  const authVariable: string = `Basic ${Buffer.from(
+    `${Client_ID}:${Client_Secret}`
+  ).toString("base64")}`;
 
+  try {
+    const responseWhole = await axios({
+      method: "post",
+      url: "https://accounts.spotify.com/api/token",
+      data: querystring.stringify({
+        grant_type: "authorization_code",
+        code: code,
+        redirect_uri: Redirect_URI,
+      }),
+      headers: {
+        "content-type": "application/x-www-form-urlencoded",
+        Authorization: authVariable,
+      },
+    });
+
+    // returning the entire response to be destructured upon return
+    return responseWhole;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+app.get("/spotify_login_callback", async (req: Request, res: Response) => {
   let userAccountDetails = await SpotifySignUpSchema.findOne({
     Client_ID: GlobalClientID,
   });
-
-
 
   if (userAccountDetails) {
     // Destructure the properties using the SpotifySignUpDocument type
@@ -191,36 +219,76 @@ app.get("/spotify_login_callback", async (req: Request, res: Response) => {
 
     const code = (req.query.code as string) || "";
 
-    const authVariable: string = `Basic ${Buffer.from(
-      `${Client_ID}:${Client_Secret}`
-    ).toString("base64")}`;
 
-    try {
-      const response = await axios({
-        method: "post",
-        url: "https://accounts.spotify.com/api/token",
-        data: querystring.stringify({
-          grant_type: "authorization_code",
-          code: code,
-          redirect_uri: Redirect_URI,
-        }),
-        headers: {
-          "content-type": "application/x-www-form-urlencoded",
-          Authorization: authVariable,
-        },
+    // calling the function to return access token here
+    const responseFromAxiosSpotifyAtuhorisation:
+      | AxiosResponse<any>
+      | undefined = await spotifyAuthAxiosPostRequst(
+      Client_ID,
+      Client_Secret,
+      Redirect_URI,
+      code
+    );
+
+    if (responseFromAxiosSpotifyAtuhorisation) {
+      const { access_token, token_type, refresh_token, expires_in } =
+        await responseFromAxiosSpotifyAtuhorisation?.data;
+
+      const queryParams = querystring.stringify({
+        access_token,
+        refresh_token,
+        expires_in,
+        Client_ID,
       });
 
-      // console.log(response.data);
-    } catch (error) {
-      console.log(error);
+      res.redirect(`http://localhost:3000/?${queryParams}`);
+
+
+    } else {
+      res.redirect(`/?${querystring.stringify({ error: "invalid_token" })}`);
     }
   }
 
-  console.log("spotify_login_callback HIT UUPP");
-  res.end();
 });
 
 
+
+
+app.get("/refresh_token", async (req, res) => {
+  const { refresh_token, client_id } = req.query as {
+    refresh_token: string;
+    client_id: string;
+  };
+
+
+  const userAcccountDetails = await SpotifySignUpSchema.findOne({
+    Client_ID: client_id,
+  });
+
+  if (userAcccountDetails && userAcccountDetails.Client_Secret) {
+   
+    axios({
+      method: "post",
+      url: "https://accounts.spotify.com/api/token",
+      data: querystring.stringify({
+        grant_type: "refresh_token",
+        refresh_token: refresh_token,
+      }),
+      headers: {
+        "content-type": "application/x-www-form-urlencoded",
+        Authorization: `Basic ${Buffer.from(
+          `${client_id}:${userAcccountDetails.Client_Secret}`
+        ).toString("base64")}`,
+      },
+    })
+      .then((response) => {
+        res.send(response.data);
+      })
+      .catch((error) => {
+        res.send(error);
+      });
+  }
+});
 
 export const server = mongoose
   .connect(
