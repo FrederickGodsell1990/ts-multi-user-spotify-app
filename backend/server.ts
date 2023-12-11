@@ -110,6 +110,8 @@ app.post("/sign_up", async (req: Request, res: Response) => {
 // client ID global here to be accessed by other route handlers
 export let GlobalClientID: String;
 
+
+
 export const logInRoute = app.post(
   "/log_in",
   async (req: Request, res: Response) => {
@@ -117,6 +119,8 @@ export const logInRoute = app.post(
 
     // assigning GlobalClientID an actual value here. It will only be changed if a different person signs in
     GlobalClientID = Client_ID;
+
+    console.log(GlobalClientID)
 
     const userAcccountDetails = await SpotifySignUpSchema.findOne({
       Client_ID: Client_ID,

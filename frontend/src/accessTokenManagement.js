@@ -20,9 +20,9 @@ const LOCALSTORAGE_VALUES = {
   client_id: window.localStorage.getItem(LOCALSTORAGE_KEYS.Client_ID),
 };
 
-// // logging to see if these values changes
-// console.log("LOCALSTORAGE_VALUES.client_id", LOCALSTORAGE_VALUES.client_id);
-// console.log("LOCALSTORAGE_VALUES value", LOCALSTORAGE_VALUES.accessToken);
+// logging to see if these values changes
+console.log("LOCALSTORAGE_VALUES.client_id", LOCALSTORAGE_VALUES.client_id);
+console.log("LOCALSTORAGE_VALUES value", LOCALSTORAGE_VALUES.accessToken);
 
 /**
  * Handles logic for retrieving the Spotify access token from localStorage
@@ -79,12 +79,26 @@ const getAccessToken = () => {
  * @returns {void}
  */
 export const logout = () => {
+
+  
   // Clear all localStorage items
   for (const property in LOCALSTORAGE_KEYS) {
     window.localStorage.removeItem(LOCALSTORAGE_KEYS[property]);
+   
   }
+ 
+  // const cookiesToClear = 'spotify_auth_state'
+
+  // document.cookie = `${cookiesToClear}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+
+  // window.location.reload(true)
+  
+ 
+
   // Navigate to homepage
   window.location = window.location.origin;
+
+  
 };
 
 /**
@@ -120,6 +134,8 @@ const refreshToken = async () => {
       console.error("No refresh token available");
       logout();
     }
+
+
 
     //client ID included here as well as refresh token to manage multiple users. May be bad practice but not secret is shared. 
     const { data } = await axios.get(
