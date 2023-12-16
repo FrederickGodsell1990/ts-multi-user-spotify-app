@@ -12,9 +12,9 @@ import {
 import {
   accessToken,
   logout,
-} from "/Users/frederickgodsell/codefiles/reacthooks/githubpull/multiUserSpotifyNewTrackCapture/frontend/src/accessTokenManagement.js";
-import { Homepage } from "/Users/frederickgodsell/codefiles/reacthooks/githubpull/multiUserSpotifyNewTrackCapture/frontend/src/HomePage.js";
-import { Testpage } from "/Users/frederickgodsell/codefiles/reacthooks/githubpull/multiUserSpotifyNewTrackCapture/frontend/src/TestPage.js";
+} from "./accessTokenManagement";
+import { Homepage } from "./HomePage.js";
+import { Testpage } from "./TestPage.js";
 
 function App() {
   const [token, setToken] = useState(null);
