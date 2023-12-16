@@ -1,3 +1,7 @@
+
+import "dotenv/config.js";
+
+
 import express, { Request, Response, Express } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
@@ -8,9 +12,19 @@ import querystring from "querystring";
 import axios, { AxiosResponse } from "axios";
 import { createProxyMiddleware } from "http-proxy-middleware";
 
+
+
+
+
+
+const FRONTEND_URI = process.env.FRONTEND_URI;
+const REDIRECT_URI = process.env.REDIRECT_URI;
+
+
 export const app = express();
 
-export const port = process.env.NODE_ENV === "test" ? getRandomPort() : 3333;
+export const port = process.env.NODE_ENV === "test" ? getRandomPort() : process.env.PORT || 3333;
+// export const port = process.env.NODE_ENV === "test" ? getRandomPort() : 3333;
 
 function getRandomPort() {
   return Math.floor(Math.random() * (5000 - 3000) + 3000);
@@ -79,7 +93,9 @@ app.post("/sign_up", async (req: Request, res: Response) => {
       });
 
       if (checkForExistingAccounts) {
-        res.redirect("http://localhost:3000/account_already_exists");
+        res.redirect(`${FRONTEND_URI}/account_already_exists`);
+        // // below works locally 
+        // res.redirect("http://localhost:3000/account_already_exists");
       } else if (!checkForExistingAccounts) {
         try {
           const saveSpotifySignUpDetailToDatabase = new SpotifySignUpSchema({
@@ -95,7 +111,9 @@ app.post("/sign_up", async (req: Request, res: Response) => {
 
           postDetailsToDatabase;
 
-          res.redirect("http://localhost:3000/account_creation_successful");
+          res.redirect(`${FRONTEND_URI}/account_creation_successful`);
+          // // below works locally 
+          // res.redirect("http://localhost:3000/account_creation_successful");
         } catch (error) {
           console.log(error);
         }
@@ -120,11 +138,12 @@ export const logInRoute = app.post(
     // assigning GlobalClientID an actual value here. It will only be changed if a different person signs in
     GlobalClientID = Client_ID;
 
-    console.log(GlobalClientID)
+    
 
     const userAcccountDetails = await SpotifySignUpSchema.findOne({
       Client_ID: Client_ID,
     });
+
 
     if (userAcccountDetails && userAcccountDetails.Username !== Username) {
       res.send("Usernames do not match");
@@ -156,8 +175,7 @@ export const logInRoute = app.post(
       const queryParams = {
         client_id: Client_ID as string,
         response_type: "code",
-        // redirect_uri: req.body?.Redirect_URI as string,
-        redirect_uri: "http://localhost:3333/spotify_login_callback",
+        redirect_uri: REDIRECT_URI,
         state,
         scope,
       };
@@ -168,7 +186,10 @@ export const logInRoute = app.post(
 
       res.redirect(authorizationUrl);
     } else if (!userAcccountDetails) {
-      res.redirect("http://localhost:3000/no_existing_account");
+      
+      res.redirect(`${FRONTEND_URI}/no_existing_account`);
+      // // below works locally 
+      // res.redirect("http://localhost:3000/no_existing_account");
     }
   }
 );
@@ -191,7 +212,7 @@ export const spotifyAuthAxiosPostRequst = async (
       data: querystring.stringify({
         grant_type: "authorization_code",
         code: code,
-        redirect_uri: Redirect_URI,
+        redirect_uri: REDIRECT_URI,
       }),
       headers: {
         "content-type": "application/x-www-form-urlencoded",
@@ -245,7 +266,11 @@ app.get("/spotify_login_callback", async (req: Request, res: Response) => {
         Client_ID,
       });
 
-      res.redirect(`http://localhost:3000/?${queryParams}`);
+// add on heroku deploy
+
+res.redirect(`${FRONTEND_URI}?${queryParams}`);
+      // // below works locally 
+      // res.redirect(`http://localhost:3000/?${queryParams}`);
 
 
     } else {
@@ -259,10 +284,19 @@ app.get("/spotify_login_callback", async (req: Request, res: Response) => {
 
 
 app.get("/refresh_token", async (req, res) => {
+
+
+// spotify blocks app in 'developer mode' from connecting to different user dashboard from the same app 
+// it gives the error - "User not registered in the Developer Dashboard" - why it does this, and the solution,
+// is explained in the link below. They do not allow hobby projects the extension
+// https://community.spotify.com/t5/Spotify-for-Developers/User-not-registered-in-the-Developer-Dashboard-on-get-profile/td-p/5260021
+
   const { refresh_token, client_id } = req.query as {
     refresh_token: string;
     client_id: string;
   };
+
+
 
 
   const userAcccountDetails = await SpotifySignUpSchema.findOne({

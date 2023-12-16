@@ -7,6 +7,8 @@ const FavouriteArtistSearch = () => {
   
   const [clientID, setClientID] = useState('')
 
+  
+
   const { spotify_access_token, spotify_client_id } = window.localStorage;
 
   console.log('spotify_access_token from local storage',spotify_access_token)
@@ -54,6 +56,23 @@ useEffect(() => {
 },[accessToken])
 
 
+const getUserDetails = async () => {
+  try {
+    const req = await axios.get(
+      "https://api.spotify.com/v1/me",
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        }
+      }
+    );
+
+   
+    console.log(req.data);
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 
   
@@ -87,6 +106,7 @@ useEffect(() => {
         ))}
       </ul>
       <button onClick={fetchTopArtists}>fetchTopArtists</button>
+      <button onClick={getUserDetails}>getUserDetails</button>
     </div>
   );
 };

@@ -10,17 +10,31 @@ function Login() {
   const [Client_Secret, setClientSecret] = useState("");
   const [signUp, setSignUp] = useState(false);
 
+
+  let LOGIN_URI;
+  let SIGN_UP_URI;
+
+  if (process.env.NODE_ENV === 'development') {
+    LOGIN_URI =  'http://localhost:3333/log_in';
+    SIGN_UP_URI = 'http://localhost:3333/sign_up';
+
+  }
+  if (process.env.REACT_APP_ENV === 'staging') {
+    console.log('i am staging ===', process.env.REACT_APP_ENV); 
+    LOGIN_URI =  'https://multi-user-spotify-app-staging-8f4f927e5f00.herokuapp.com/log_in';
+    SIGN_UP_URI = 'https://multi-user-spotify-app-staging-8f4f927e5f00.herokuapp.com/sign_up';
+  }
+ 
+
   return (
     <>
-     
-
       <div className="RegisterAccount">
         Sign up & log in
 
-   
 
-        <form method="POST" action="http://localhost:3333/sign_up">
-
+        {/* <form method="POST" action="http://localhost:3333/sign_up"> */}
+        <form method="POST" action={SIGN_UP_URI}>
+         
           <input
             type="text"
             placeholder="Username"
@@ -37,7 +51,7 @@ function Login() {
               setClientID(e.target.value);
             }}
           />
-           <input
+          <input
             type="text"
             placeholder="Client_Secret"
             name="Client_Secret"
@@ -57,7 +71,6 @@ function Login() {
             onChange={(e) => setReleaseRadarCode(e.target.value)}
           />
 
-         
           <input type="hidden" name="signup" value="signup" />
 
           <button type="submit">Log in & sign up - Submit login details</button>
@@ -66,7 +79,8 @@ function Login() {
 
       <div className="RegisterAccount">
         Login New
-        <form method="POST" action="http://localhost:3333/log_in">
+        {/* <form method="POST" action="http://localhost:3333/log_in"> */}
+        <form method="POST" action={LOGIN_URI}>
           <input
             type="text"
             placeholder="Username"
