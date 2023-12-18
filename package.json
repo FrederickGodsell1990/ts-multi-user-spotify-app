@@ -1,7 +1,7 @@
 {
   "name": "Sept5th2023root",
   "version": "1.0.0",
-  "main": "backend/server.js",
+  "main": "index.js",
   "engines": {
     "node": "14.17.3"
   },
