@@ -14,9 +14,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run start-frontend",
     "start-frontend": "cd frontend && npm start",
-    "build": "cd frontend/ && npm install && npm run build",
-    "backend-build": "tsc",
-    "postinstall": "npm run backend-build",
+    "build": "tsc && cd frontend/ && npm install && npm run build",
+  
     "start-server": "cd backend/ && ts-node server.ts"
   },
   "keywords": [],
