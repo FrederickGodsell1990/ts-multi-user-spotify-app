@@ -15,8 +15,9 @@
     "start": "npm run start-frontend",
     "start-frontend": "cd frontend && npm start",
     "build": "npm install && cd backend/ && npm install && cd ../frontend/ && npm install && npm run build",
-    "postinstall": "cd backend/ && npm install -g typescript",
-    "start-server": "cd backend/ && ts-node server.ts"
+    "postinstall": "cd backend/ && npm install -g typescript && tsc",
+    "start-server": "node backend/dist/server.js"
+
   },
   "keywords": [],
   "author": "",
