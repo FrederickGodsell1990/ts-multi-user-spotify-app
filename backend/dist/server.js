@@ -1,27 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -45,12 +22,12 @@ const testSchema_1 = __importDefault(require("./mongoDBModels/testSchema"));
 const spotifySignUpSchema_1 = __importDefault(require("./mongoDBModels/spotifySignUpSchema"));
 const querystring_1 = __importDefault(require("querystring"));
 const axios_1 = __importDefault(require("axios"));
+const path = require("path");
 const FRONTEND_URI = process.env.FRONTEND_URI;
 const REDIRECT_URI = process.env.REDIRECT_URI;
 exports.app = (0, express_1.default)();
 exports.port = process.env.NODE_ENV === "test" ? getRandomPort() : process.env.PORT || 3333;
 // export const port = process.env.NODE_ENV === "test" ? getRandomPort() : 3333;
-const path = __importStar(require("path"));
 function getRandomPort() {
     return Math.floor(Math.random() * (5000 - 3000) + 3000);
 }
@@ -255,7 +232,7 @@ exports.app.get("/refresh_token", (req, res) => __awaiter(void 0, void 0, void 0
         });
     }
 }));
-exports.app.use(express_1.default.static(path.resolve(__dirname, '../../../frontend/build')));
+exports.app.use(express_1.default.static(path.resolve(__dirname, '../../frontend/build')));
 exports.app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../../frontend/build', 'index.html'));
 });

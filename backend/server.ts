@@ -9,6 +9,7 @@ import SpotifySignUpSchema from "./mongoDBModels/spotifySignUpSchema";
 import querystring from "querystring";
 import axios, { AxiosResponse } from "axios";
 import { createProxyMiddleware } from "http-proxy-middleware";
+const path = require("path");
 
 const FRONTEND_URI = process.env.FRONTEND_URI;
 const REDIRECT_URI = process.env.REDIRECT_URI;
@@ -18,15 +19,6 @@ export const app = express();
 export const port =
   process.env.NODE_ENV === "test" ? getRandomPort() : process.env.PORT || 3333;
 // export const port = process.env.NODE_ENV === "test" ? getRandomPort() : 3333;
-
-
-
-import * as path from 'path';
-
-
-
-
-
 
 function getRandomPort() {
   return Math.floor(Math.random() * (5000 - 3000) + 3000);
@@ -311,7 +303,7 @@ app.get("/refresh_token", async (req, res) => {
   }
 });
 
-app.use(express.static(path.resolve(__dirname, '../../../frontend/build')))
+app.use(express.static(path.resolve(__dirname, '../../frontend/build')))
 
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../../frontend/build', 'index.html'));
