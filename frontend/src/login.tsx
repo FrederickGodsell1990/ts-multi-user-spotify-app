@@ -19,8 +19,8 @@ function Login() {
     SIGN_UP_URI = 'http://localhost:3333/sign_up';
 
   }
-  if (process.env.REACT_APP_ENV === 'staging') {
-    console.log('i am staging ===', process.env.REACT_APP_ENV); 
+  if (process.env.REACT_APP_ENV === 'production') {
+    console.log('i am staproductionging ===', process.env.REACT_APP_ENV); 
     LOGIN_URI =  'https://multi-user-spotify-app-staging-8f4f927e5f00.herokuapp.com/log_in';
     SIGN_UP_URI = 'https://multi-user-spotify-app-staging-8f4f927e5f00.herokuapp.com/sign_up';
   }
