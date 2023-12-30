@@ -25,7 +25,7 @@ import * as path from 'path';
 
 
 
-app.use(express.static(path.resolve(__dirname, '../../../frontend/build')))
+
 
 
 function getRandomPort() {
@@ -50,9 +50,9 @@ app.use((req, res, next) => {
 app.use(cors());
 
 // Sample route
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello, Express server with TypeScript!");
-});
+// app.get("/", (req: Request, res: Response) => {
+//   res.send("Hello, Express server with TypeScript!");
+// });
 
 app.post("/frontend_data_to_server", async (req: Request, res: Response) => {
   console.log("req.body is;", req.body);
@@ -311,6 +311,7 @@ app.get("/refresh_token", async (req, res) => {
   }
 });
 
+app.use(express.static(path.resolve(__dirname, '../../../frontend/build')))
 
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../../frontend/build', 'index.html'));

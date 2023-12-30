@@ -51,7 +51,6 @@ exports.app = (0, express_1.default)();
 exports.port = process.env.NODE_ENV === "test" ? getRandomPort() : process.env.PORT || 3333;
 // export const port = process.env.NODE_ENV === "test" ? getRandomPort() : 3333;
 const path = __importStar(require("path"));
-exports.app.use(express_1.default.static(path.resolve(__dirname, '../../../frontend/build')));
 function getRandomPort() {
     return Math.floor(Math.random() * (5000 - 3000) + 3000);
 }
@@ -66,9 +65,9 @@ exports.app.use((req, res, next) => {
 });
 exports.app.use((0, cors_1.default)());
 // Sample route
-exports.app.get("/", (req, res) => {
-    res.send("Hello, Express server with TypeScript!");
-});
+// app.get("/", (req: Request, res: Response) => {
+//   res.send("Hello, Express server with TypeScript!");
+// });
 exports.app.post("/frontend_data_to_server", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     console.log("req.body is;", req.body);
@@ -256,6 +255,7 @@ exports.app.get("/refresh_token", (req, res) => __awaiter(void 0, void 0, void 0
         });
     }
 }));
+exports.app.use(express_1.default.static(path.resolve(__dirname, '../../../frontend/build')));
 exports.app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../../frontend/build', 'index.html'));
 });
