@@ -25,7 +25,7 @@ import * as path from 'path';
 
 
 
-app.use(express.static(path.resolve(__dirname, '../frontend/build')))
+app.use(express.static(path.resolve(__dirname, '../../frontend/build')))
 
 
 function getRandomPort() {
