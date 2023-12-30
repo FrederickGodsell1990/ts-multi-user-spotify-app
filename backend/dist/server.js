@@ -51,7 +51,7 @@ exports.app = (0, express_1.default)();
 exports.port = process.env.NODE_ENV === "test" ? getRandomPort() : process.env.PORT || 3333;
 // export const port = process.env.NODE_ENV === "test" ? getRandomPort() : 3333;
 const path = __importStar(require("path"));
-exports.app.use(express_1.default.static(path.resolve(__dirname, '../frontend/build')));
+exports.app.use(express_1.default.static(path.resolve(__dirname, '../../../frontend/build')));
 function getRandomPort() {
     return Math.floor(Math.random() * (5000 - 3000) + 3000);
 }
@@ -257,7 +257,7 @@ exports.app.get("/refresh_token", (req, res) => __awaiter(void 0, void 0, void 0
     }
 }));
 exports.app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../frontend/build', 'index.html'));
+    res.sendFile(path.resolve(__dirname, '../../frontend/build', 'index.html'));
 });
 exports.server = mongoose_1.default
     .connect("mongodb+srv://frederickgodsell:Fs6pIF2Evt64PUs1@multiuserspotifyapp.fxm38gv.mongodb.net/?retryWrites=true&w=majority", {})
