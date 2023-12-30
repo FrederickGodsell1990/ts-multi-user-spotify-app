@@ -16,7 +16,8 @@
     "start-frontend": "cd frontend && npm start",
     "build": "npm install && cd backend/ && npm install && cd ../frontend/ && npm install && npm run build",
     "postinstall": "cd backend/ && npm i -g typescript",
-    "start-server": "node backend/dist/server.js"
+    "start-server": "node backend/dist/server.js",
+    "heroku-postbuild": "npm install && npm run build"
   },
   "keywords": [],
   "author": "",
