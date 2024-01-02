@@ -18,7 +18,7 @@ export const app = express();
 
 export const port =
   process.env.NODE_ENV === "test" ? getRandomPort() : process.env.PORT || 3333;
-// export const port = process.env.NODE_ENV === "test" ? getRandomPort() : 3333;
+
 
 function getRandomPort() {
   return Math.floor(Math.random() * (5000 - 3000) + 3000);
@@ -41,10 +41,10 @@ app.use((req, res, next) => {
 
 app.use(cors());
 
-// Sample route
-// app.get("/", (req: Request, res: Response) => {
-//   res.send("Hello, Express server with TypeScript!");
-// });
+
+app.get("/", (req: Request, res: Response) => {
+  res.send("Hello, Express server with TypeScript!");
+});
 
 app.post("/frontend_data_to_server", async (req: Request, res: Response) => {
   console.log("req.body is;", req.body);
