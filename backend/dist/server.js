@@ -27,7 +27,6 @@ const FRONTEND_URI = process.env.FRONTEND_URI;
 const REDIRECT_URI = process.env.REDIRECT_URI;
 exports.app = (0, express_1.default)();
 exports.port = process.env.NODE_ENV === "test" ? getRandomPort() : process.env.PORT || 3333;
-// export const port = process.env.NODE_ENV === "test" ? getRandomPort() : 3333;
 function getRandomPort() {
     return Math.floor(Math.random() * (5000 - 3000) + 3000);
 }
@@ -41,7 +40,6 @@ exports.app.use((req, res, next) => {
     next();
 });
 exports.app.use((0, cors_1.default)());
-// Sample route
 // app.get("/", (req: Request, res: Response) => {
 //   res.send("Hello, Express server with TypeScript!");
 // });

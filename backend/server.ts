@@ -42,9 +42,9 @@ app.use((req, res, next) => {
 app.use(cors());
 
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello, Express server with TypeScript!");
-});
+// app.get("/", (req: Request, res: Response) => {
+//   res.send("Hello, Express server with TypeScript!");
+// });
 
 app.post("/frontend_data_to_server", async (req: Request, res: Response) => {
   console.log("req.body is;", req.body);

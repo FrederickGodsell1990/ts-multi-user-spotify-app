@@ -18,7 +18,10 @@
     "start-server": "node backend/dist/server.js",
     "heroku-postbuild": "npm run build",
     "develop": "concurrently --kill-others-on-fail \"npm run server\" \"npm run start --prefix frontend\"",
-    "start": "concurrently --kill-others-on-fail \"npm run start-server\" \"npm run start --prefix frontend\""
+    "start": "concurrently --kill-others-on-fail \"npm run start-server\" \"npm run start --prefix frontend\"",
+    "dev-start": "concurrently \"npm run dev-start-backend\" \"npm run dev-start-frontend\"",
+    "dev-start-backend": "cd backend && npm start",
+    "dev-start-frontend": "cd frontend && npm start"
   },
   "keywords": [],
   "author": "",
