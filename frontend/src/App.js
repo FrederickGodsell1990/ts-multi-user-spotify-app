@@ -9,21 +9,19 @@ import {
   LoginFailed,
   WrongUsername,
 } from "./SignInSuccessful";
-import {
-  accessToken,
-  logout,
-} from "./accessTokenManagement";
+import { accessToken, logout } from "./accessTokenManagement";
 import { Homepage } from "./HomePage.js";
 import { Testpage } from "./TestPage.js";
+
+import { Provider } from "react-redux";
+import store from "./redux/store";
+import Cart from "./redux/cart";
 
 function App() {
   const [token, setToken] = useState(null);
 
   useEffect(() => {
     setToken(accessToken);
-
-    
-   
   });
   return (
     <div>
@@ -47,13 +45,16 @@ function App() {
         </>
       ) : (
         <>
-          <Router>
-            <Routes>
-              <Route path="/" element={<Homepage />} />
+          <Provider store={store}>
+            <Router>
+              <Routes>
+                <Route path="/" element={<Homepage />} />
 
-              <Route path="/test_page" element={<Testpage />} />
-            </Routes>
-          </Router>
+              
+                <Route path="/test_page" element={<Testpage />} />
+              </Routes>
+            </Router>
+          </Provider>
         </>
       )}
     </div>
