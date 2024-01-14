@@ -2,8 +2,8 @@ import { createStore, combineReducers } from "redux";
 import { configureStore } from '@reduxjs/toolkit';
 
 
-import  cartReducer  from "./cartReducer";
 import usernameReducer from "./userNameReducer"
+import userDetailsReducer from "./userDetailsReducer";
 
 // const store = createStore(cartReducer);
 
@@ -13,8 +13,8 @@ import usernameReducer from "./userNameReducer"
 
 const store = configureStore({
     reducer: {
-        cart: cartReducer,
         username: usernameReducer,
+        userDetails : userDetailsReducer
         // Add more reducers as needed
       }
   });

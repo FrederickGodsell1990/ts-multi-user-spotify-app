@@ -15,7 +15,7 @@ import { Testpage } from "./TestPage.js";
 
 import { Provider } from "react-redux";
 import store from "./redux/store";
-import Cart from "./redux/cart";
+
 
 function App() {
   const [token, setToken] = useState(null);
@@ -23,6 +23,9 @@ function App() {
   useEffect(() => {
     setToken(accessToken);
   });
+
+
+
   return (
     <div>
       {!token ? (
@@ -50,7 +53,6 @@ function App() {
               <Routes>
                 <Route path="/" element={<Homepage />} />
 
-              
                 <Route path="/test_page" element={<Testpage />} />
               </Routes>
             </Router>
