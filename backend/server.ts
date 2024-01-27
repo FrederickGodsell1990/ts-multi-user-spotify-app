@@ -19,7 +19,6 @@ export const app = express();
 export const port =
   process.env.NODE_ENV === "test" ? getRandomPort() : process.env.PORT || 3333;
 
-
 function getRandomPort() {
   return Math.floor(Math.random() * (5000 - 3000) + 3000);
 }
@@ -40,7 +39,6 @@ app.use((req, res, next) => {
 });
 
 app.use(cors());
-
 
 // app.get("/", (req: Request, res: Response) => {
 //   res.send("Hello, Express server with TypeScript!");
@@ -303,13 +301,26 @@ app.get("/refresh_token", async (req, res) => {
   }
 });
 
-app.use(express.static(path.resolve(__dirname, '../../frontend/build')))
+// endpoint to send release radar code tom client
+app.post("/mongo_user_details", async (req, res) => {
+  const { getClientID } = req?.body;
 
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '../../frontend/build', 'index.html'));
+  const userAcccountDetails = await SpotifySignUpSchema.findOne({
+    Client_ID: getClientID,
+  });
+
+  if (userAcccountDetails && userAcccountDetails.Release_Radar_code) {
+    res.send(userAcccountDetails.Release_Radar_code);
+  } else if(!userAcccountDetails) {
+    res.send('No account exists');
+  }
 });
 
+app.use(express.static(path.resolve(__dirname, "../../frontend/build")));
 
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "../../frontend/build", "index.html"));
+});
 
 export const server = mongoose
   .connect(

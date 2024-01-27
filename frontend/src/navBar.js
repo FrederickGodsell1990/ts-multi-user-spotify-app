@@ -16,38 +16,36 @@ export const NavBar = () => {
     navigate("/test_page");
   };
 
-  const [userImage, setUserImage] = useState("");
-  const [userName, setUserName] = useState("");
   const [allPlaylists, setAllPlaylists] = useState([]);
 
   const logOutToRest = "Log out to reset";
 
   // for playlists + user details
   useEffect(() => {
-    getUserDetails();
     fetchAllPlaylists();
   }, []);
 
   // redux for user details
   const dispatch = useDispatch();
-  const state = useSelector((state) => state);
+  // if you has (state) => state i.e you call all state the browser gives a warning 
+  const state = useSelector((state) => state.userDetails);
   // peices of state from redux store
 
   const userDetailsObjectFromStore =
-    state.userDetails.storeUserDetails?.country ?? logOutToRest;
+    state.storeUserDetails?.country ?? logOutToRest;
   const displayNameFromStore =
-    state.userDetails.storeUserDetails?.display_name ?? logOutToRest;
+    state.storeUserDetails?.display_name ?? logOutToRest;
   const userImageFromStore =
-    state.userDetails.storeUserDetails?.images?.[0]?.url ?? logOutToRest;
+    state.storeUserDetails?.images?.[0]?.url ?? logOutToRest;
 
   useEffect(() => {
     (async () => {
       const APICall = await getUserDetails();
-  
+
       const userDetailsFromAPICall = APICall;
 
       dispatch(addUserDetails(userDetailsFromAPICall));
-      console.log("entire state", state);
+     
     })();
   }, [userDetailsObjectFromStore]);
 
@@ -59,12 +57,6 @@ export const NavBar = () => {
         },
       });
 
-      console.log(req.data);
-      console.log("user spotify image", req.data.images?.[0].url);
-      const spotifyUserImageResponse = req.data.images?.[0].url;
-      const spotifyUserNameResponse = req.data.display_name;
-      setUserImage(spotifyUserImageResponse);
-      setUserName(spotifyUserNameResponse);
       return req.data;
     } catch (error) {
       console.error(error);
@@ -80,7 +72,7 @@ export const NavBar = () => {
       });
 
       //  console.log("fetchAllPlaylists indiv", req.data.items);
-      console.log("fetchAllPlaylists", req.data);
+   
       const allPlaylistResponse = req.data.items;
 
       setAllPlaylists(allPlaylistResponse);
@@ -98,7 +90,6 @@ export const NavBar = () => {
           <img src={userImageFromStore} width="30" height="30" alt="" />
           {displayNameFromStore} image and name from redux
         </a>
-       
 
         <button
           class="navbar-toggler"

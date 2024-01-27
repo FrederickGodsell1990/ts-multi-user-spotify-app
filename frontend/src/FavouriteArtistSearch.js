@@ -11,8 +11,6 @@ const FavouriteArtistSearch = () => {
 
   const { spotify_access_token, spotify_client_id } = window.localStorage;
 
-  console.log('spotify_access_token from local storage',spotify_access_token)
-  console.log('accessToken from new access token generator',accessToken)
 
   const favouriteArtistParams = {
     time_range: "medium_term",

@@ -1,22 +1,25 @@
-import { createStore, combineReducers } from "redux";
+import { createStore, combineReducers, applyMiddleware } from "redux";
 import { configureStore } from '@reduxjs/toolkit';
 
+import releaseRadarSlice from './slices/releaseRadarSlice';
+import RadarCodeFromMongoSlice from './slices/radarCodeFromMongoSlice'
 
-import usernameReducer from "./userNameReducer"
+import usernameReducer from "./userNameReducer";
 import userDetailsReducer from "./userDetailsReducer";
+import releaseRadarReducer from "./releaseRaderReducer";
+ 
 
-// const store = createStore(cartReducer);
 
-// export default store;
-
-////////
 
 const store = configureStore({
     reducer: {
         username: usernameReducer,
-        userDetails : userDetailsReducer
+        userDetails : userDetailsReducer,
+        releaseRadar: releaseRadarReducer,
+        releaseRadarThunk : releaseRadarSlice.reducer,
+        mongoDBThunk : RadarCodeFromMongoSlice.reducer
         // Add more reducers as needed
-      }
+      }, 
   });
   
 

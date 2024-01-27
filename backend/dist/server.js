@@ -230,9 +230,22 @@ exports.app.get("/refresh_token", (req, res) => __awaiter(void 0, void 0, void 0
         });
     }
 }));
-exports.app.use(express_1.default.static(path.resolve(__dirname, '../../frontend/build')));
-exports.app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../../frontend/build', 'index.html'));
+// endpoint to send release radar code tom client
+exports.app.post("/mongo_user_details", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { getClientID } = req === null || req === void 0 ? void 0 : req.body;
+    const userAcccountDetails = yield spotifySignUpSchema_1.default.findOne({
+        Client_ID: getClientID,
+    });
+    if (userAcccountDetails && userAcccountDetails.Release_Radar_code) {
+        res.send(userAcccountDetails.Release_Radar_code);
+    }
+    else if (!userAcccountDetails) {
+        res.send('No account exists');
+    }
+}));
+exports.app.use(express_1.default.static(path.resolve(__dirname, "../../frontend/build")));
+exports.app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../../frontend/build", "index.html"));
 });
 exports.server = mongoose_1.default
     .connect("mongodb+srv://frederickgodsell:Fs6pIF2Evt64PUs1@multiuserspotifyapp.fxm38gv.mongodb.net/?retryWrites=true&w=majority", {})
