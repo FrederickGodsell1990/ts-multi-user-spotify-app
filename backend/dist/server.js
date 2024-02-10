@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.server = exports.spotifyAuthAxiosPostRequst = exports.logInRoute = exports.GlobalClientID = exports.port = exports.app = void 0;
+exports.server = exports.postReleaseRadarTracksToMongo = exports.spotifyAuthAxiosPostRequst = exports.logInRoute = exports.GlobalClientID = exports.port = exports.app = void 0;
 require("dotenv/config.js");
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
@@ -31,7 +31,7 @@ function getRandomPort() {
     return Math.floor(Math.random() * (5000 - 3000) + 3000);
 }
 // bodyParser with extended : false needed to receive form data
-exports.app.use(body_parser_1.default.urlencoded({ extended: false }));
+exports.app.use(body_parser_1.default.urlencoded({ extended: true }));
 exports.app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Headers", "*");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
@@ -240,7 +240,67 @@ exports.app.post("/mongo_user_details", (req, res) => __awaiter(void 0, void 0, 
         res.send(userAcccountDetails.Release_Radar_code);
     }
     else if (!userAcccountDetails) {
-        res.send('No account exists');
+        res.send("No account exists");
+    }
+}));
+const postReleaseRadarTracksToMongo = (objectFromFrontEnd, ID) => __awaiter(void 0, void 0, void 0, function* () {
+    // blank array to eventually return
+    const arrayOfUniqueTracks = [];
+    const lengthOfArray = objectFromFrontEnd.length;
+    // for...of used in favour of map as the former waits iteration to complete before moving to the next one, it maintains the order of elements
+    for (const [index, trackObject] of objectFromFrontEnd.entries()) {
+        const trackSpotifyIDPresent = yield spotifySignUpSchema_1.default.find({
+            $and: [
+                { Client_ID: ID },
+                {
+                    releaseRadarData: {
+                        $elemMatch: { trackSpotifyID: trackObject.trackSpotifyID },
+                    },
+                },
+            ],
+        });
+        // condition for every iteration other than the last
+        if (index <= lengthOfArray - 2) {
+            // if track is not present on database, push it to the arrayOfUniqueTracks array
+            if (trackSpotifyIDPresent.length === 0) {
+                arrayOfUniqueTracks.push(trackObject);
+            }
+        }
+        // condition for the last item of the array
+        if (index === lengthOfArray - 1) {
+            // if track is not present on database, push it to the arrayOfUniqueTracks array
+            if (trackSpotifyIDPresent.length === 0) {
+                arrayOfUniqueTracks.push(trackObject);
+            }
+        }
+    }
+    return arrayOfUniqueTracks;
+});
+exports.postReleaseRadarTracksToMongo = postReleaseRadarTracksToMongo;
+// route to receive list of tracks from release radar, cross reference when agaoinst the list of tracks user already has + return only unique tracks
+exports.app.post("/post_release_radar_tracks", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const releaseRadarTracksInObjectForm = yield req.body;
+    const { objectFromFrontEnd, ID } = releaseRadarTracksInObjectForm;
+    // variable that calls function that checks each track against the existing tracks on the user's database record
+    const arrayOfUniqueTracks = yield (0, exports.postReleaseRadarTracksToMongo)(objectFromFrontEnd, ID);
+    try {
+        // mongo query checks client ID + updates that record with array of tracks not yet present in it
+        const updateMongo = yield spotifySignUpSchema_1.default.findOneAndUpdate({ Client_ID: releaseRadarTracksInObjectForm.ID }, // Query to find the document by its ID
+        {
+            $push: {
+                releaseRadarData: arrayOfUniqueTracks,
+            },
+        }, // Push the new data to the releaseRadarData array
+        { new: true } // Option to return the updated document
+        );
+        // return array of tracks added to mongo. If empty, array will be empty
+        res.status(201).json({
+            message: "post_release_radar_tracks hit and mongo updated with new tracks",
+            arrayOfUniqueTracks,
+        });
+    }
+    catch (error) {
+        console.log(error);
     }
 }));
 exports.app.use(express_1.default.static(path.resolve(__dirname, "../../frontend/build")));

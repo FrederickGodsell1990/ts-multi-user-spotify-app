@@ -8,23 +8,59 @@ const Schema = mongoose_1.default.Schema;
 const SpotifySignUpSchema = new Schema({
     Client_ID: {
         type: String,
-        required: true
+        required: true,
     },
     Redirect_URI: {
         type: String,
-        required: true
+        required: true,
     },
     Release_Radar_code: {
         type: String,
-        required: true
+        required: true,
     },
     Username: {
         type: String,
-        required: true
+        required: true,
     },
     Client_Secret: {
         type: String,
-        required: true
-    }
+        required: true,
+    },
+    releaseRadarData: [
+        {
+            artist: {
+                type: String,
+                required: false,
+            },
+            trackName: {
+                type: String,
+                required: false,
+            },
+            trackSpotifyID: {
+                type: String,
+                required: false,
+            },
+            dateAdded: {
+                type: String,
+                required: false,
+            },
+            markedAsRemoved: {
+                type: String,
+                required: false,
+            },
+            album: {
+                type: String,
+                required: false,
+            },
+            albumReleaseDate: {
+                type: String,
+                required: false,
+            },
+            albumImage: {
+                type: String,
+                required: false,
+            },
+        },
+    ],
 });
-exports.default = mongoose_1.default.model('SpotifySignUpSchema', SpotifySignUpSchema);
+exports.default = mongoose_1.default.model("SpotifySignUpSchema", SpotifySignUpSchema);

@@ -6,6 +6,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import testDataSchema from "./mongoDBModels/testSchema";
 import SpotifySignUpSchema from "./mongoDBModels/spotifySignUpSchema";
+import ReleaseRadarModel from "./mongoDBModels/releaseRadarSchema";
 import querystring from "querystring";
 import axios, { AxiosResponse } from "axios";
 import { createProxyMiddleware } from "http-proxy-middleware";
@@ -24,7 +25,7 @@ function getRandomPort() {
 }
 
 // bodyParser with extended : false needed to receive form data
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Headers", "*");
@@ -311,8 +312,119 @@ app.post("/mongo_user_details", async (req, res) => {
 
   if (userAcccountDetails && userAcccountDetails.Release_Radar_code) {
     res.send(userAcccountDetails.Release_Radar_code);
-  } else if(!userAcccountDetails) {
-    res.send('No account exists');
+  } else if (!userAcccountDetails) {
+    res.send("No account exists");
+  }
+});
+
+// _id
+// 6525b4f33809eecf17acc425
+// Client_ID
+// "a3d31807124d40248f802fbbdaca4476"
+// Redirect_URI
+// "http://localhost:3333/spotify_login_callback"
+// Release_Radar_code
+// "37i9dQZEVXbftpojYxNDUm"
+// Username
+// "Ellen"
+// Client_Secret
+// "8ca53ce8351b434ab79b2a9a26e6212f"
+// __v
+// 0
+
+// _id
+// 6525ba0febc0673d33303f74
+// Client_ID
+// "93df828bbcc848da91f1fcf931fd40a4"
+// Redirect_URI
+// "http://localhost:3333/spotify_login_callback"
+// Release_Radar_code
+// "37i9dQZEVXbpTERBYDw7WM"
+// Username
+// "Frederico"
+// Client_Secret
+// "772b452f59204c60818f4a089ae06fcc"
+// __v
+// 0
+
+// interface to determine type for object parameter of postReleaseRadarTracksToMongo function below
+interface KeyValueObject {
+  [key: string]: string;
+}
+
+export const postReleaseRadarTracksToMongo = async (
+  objectFromFrontEnd: KeyValueObject[],
+  ID: any
+) => {
+  // blank array to eventually return
+  const arrayOfUniqueTracks: any[] = [];
+
+  const lengthOfArray = objectFromFrontEnd.length;
+
+  // for...of used in favour of map as the former waits iteration to complete before moving to the next one, it maintains the order of elements
+  for (const [index, trackObject] of objectFromFrontEnd.entries()) {
+    const trackSpotifyIDPresent = await SpotifySignUpSchema.find({
+      $and: [
+        { Client_ID: ID },
+        {
+          releaseRadarData: {
+            $elemMatch: { trackSpotifyID: trackObject.trackSpotifyID },
+          },
+        },
+      ],
+    });
+
+    // condition for every iteration other than the last
+    if (index <= lengthOfArray - 2) {
+      // if track is not present on database, push it to the arrayOfUniqueTracks array
+      if (trackSpotifyIDPresent.length === 0) {
+        arrayOfUniqueTracks.push(trackObject);
+      }
+    }
+    // condition for the last item of the array
+    if (index === lengthOfArray - 1) {
+      // if track is not present on database, push it to the arrayOfUniqueTracks array
+      if (trackSpotifyIDPresent.length === 0) {
+        arrayOfUniqueTracks.push(trackObject);
+      }
+    }
+  }
+
+  return arrayOfUniqueTracks;
+};
+
+// route to receive list of tracks from release radar, cross reference when agaoinst the list of tracks user already has + return only unique tracks
+app.post("/post_release_radar_tracks", async (req, res) => {
+  const releaseRadarTracksInObjectForm = await req.body;
+
+  const { objectFromFrontEnd, ID } = releaseRadarTracksInObjectForm;
+
+  // variable that calls function that checks each track against the existing tracks on the user's database record
+  const arrayOfUniqueTracks = await postReleaseRadarTracksToMongo(
+    objectFromFrontEnd,
+    ID
+  );
+
+  try {
+    // mongo query checks client ID + updates that record with array of tracks not yet present in it
+    const updateMongo = await SpotifySignUpSchema.findOneAndUpdate(
+      { Client_ID: releaseRadarTracksInObjectForm.ID }, // Query to find the document by its ID
+      {
+        $push: {
+          releaseRadarData: arrayOfUniqueTracks,
+        },
+      }, // Push the new data to the releaseRadarData array
+      { new: true } // Option to return the updated document
+    );
+
+    // return array of tracks added to mongo. If empty, array will be empty
+    res.status(201).json({
+      message:
+        "post_release_radar_tracks hit and mongo updated with new tracks",
+      arrayOfUniqueTracks,
+    });
+  } catch (error) {
+    console.log(error);
   }
 });
 
