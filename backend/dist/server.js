@@ -303,6 +303,60 @@ exports.app.post("/post_release_radar_tracks", (req, res) => __awaiter(void 0, v
         console.log(error);
     }
 }));
+// app.post("/test_paylists_to_database", async (req, res) => {
+//   const { playlistData, ID } = await req.body;
+//   console.log("playlistData", playlistData, "ID", ID);
+//   try {
+//     const updateMongo = await SpotifySignUpSchema.findOneAndUpdate(
+//       { Client_ID: ID }, // Query to find the document by its ID
+//       {
+//         $push: {
+//           playlistData: playlistData,
+//         },
+//       }, // Push the new data to the releaseRadarData array
+//       { new: true } // Option to return the updated document
+//     );
+//   } catch (error) {
+//     console.log(error)
+//   }
+// });
+// gets all app-generated playlists from database - returns either full list or empty array
+exports.app.post("/get_playlists_from_database", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { ID } = req.body;
+    try {
+        const fullArrayOfPlaylistsFromMongo = yield spotifySignUpSchema_1.default.findOne({
+            Client_ID: ID,
+        }).select("playlistData");
+        res.status(201).json({
+            message: "/get_playlists_from_database hit",
+            fullArrayOfPlaylistsFromMongo,
+        });
+    }
+    catch (error) {
+        console.log(error);
+    }
+}));
+exports.app.post("/post_new_playlist_to_database", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log('post_new_playlist_to_database', req.body);
+    const { playlistData, clientID } = req.body;
+    try {
+        const updateMongo = yield spotifySignUpSchema_1.default.findOneAndUpdate({ Client_ID: clientID }, // Query to find the document by its ID
+        {
+            $push: {
+                playlistData: playlistData,
+            },
+        }, // Push the new data to the playlistData array
+        { new: true } // Option to return the updated document
+        );
+        res.status(201).json({
+            message: "/post_new_playlist_to_database hit",
+            updateMongo,
+        });
+    }
+    catch (error) {
+        console.log(error);
+    }
+}));
 exports.app.use(express_1.default.static(path.resolve(__dirname, "../../frontend/build")));
 exports.app.get("*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "../../frontend/build", "index.html"));

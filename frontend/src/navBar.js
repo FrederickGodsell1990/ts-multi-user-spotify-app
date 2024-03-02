@@ -5,6 +5,7 @@ import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { addUsername, removeUsername } from "./redux/userNameAction";
 import { addUserDetails, removeUserDetails } from "./redux/userDetailsAction";
+import './styles.css';
 
 // // can delete this and the file it comes from - just checking it was needed
 // ReleaseRaderAPICallFunction()
@@ -86,7 +87,7 @@ export const NavBar = () => {
   return userDetailsObjectFromStore !== logOutToRest ? (
     <>
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand " href="#">
+        <a class="navbar-brand " href="#" >
           <img src={userImageFromStore} width="30" height="30" alt="" />
           {displayNameFromStore} image and name from redux
         </a>

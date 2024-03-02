@@ -1,7 +1,7 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import { configureStore } from "@reduxjs/toolkit";
-
 import RadarCodeFromMongoSlice from "./slices/radarCodeFromMongoSlice";
+import PlaylistCodeFromMongoSlice from "./slices/playlistCodeFromMongoSlice";
 
 import usernameReducer from "./userNameReducer";
 import userDetailsReducer from "./userDetailsReducer";
@@ -13,6 +13,7 @@ const store = configureStore({
     userDetails: userDetailsReducer,
     releaseRadar: releaseRadarReducer,
     mongoDBThunk: RadarCodeFromMongoSlice.reducer,
+    playlistThunk: PlaylistCodeFromMongoSlice.reducer,
   },
 });
 

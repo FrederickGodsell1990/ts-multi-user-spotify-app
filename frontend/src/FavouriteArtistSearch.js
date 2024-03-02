@@ -17,38 +17,6 @@ const FavouriteArtistSearch = () => {
     limit: 10,
   };
 
-  // useEffect(() => {
-
-  //   setAccessToken(spotify_access_token)
-  //   setClientID(spotify_client_id)
-
-  //   const fetchTopArtists = async () => {
-  //     try {
-  //       const { data } = await axios.get(
-  //         "https://api.spotify.com/v1/me/top/artists",
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${spotify_access_token}`,
-  //           },
-  //           params: favouriteArtistParams,
-  //         }
-  //       );
-
-  //       const { items } = data;
-
-  //       setFavouriteArtistsID(items);
-  //       console.log(items);
-  //       console.log(data);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-
-    
-
-  //   fetchTopArtists();
-  // }, [accessToken]);
-
 useEffect(() => {
     
 },[accessToken])

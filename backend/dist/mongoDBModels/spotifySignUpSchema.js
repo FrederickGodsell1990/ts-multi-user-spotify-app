@@ -26,6 +26,22 @@ const SpotifySignUpSchema = new Schema({
         type: String,
         required: true,
     },
+    playlistData: [
+        {
+            monthAndYearCreated: {
+                type: String,
+                required: false,
+            },
+            playlistSpotifyID: {
+                type: String,
+                required: false,
+            },
+            playlistName: {
+                type: String,
+                required: false,
+            },
+        },
+    ],
     releaseRadarData: [
         {
             artist: {
