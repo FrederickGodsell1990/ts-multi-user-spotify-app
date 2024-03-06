@@ -1,32 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { accessToken, getClientID, getURI } from "../accessTokenManagement.js";
-import { useSelector, shallowEqual } from "react-redux";
-import { TrackRenderMoreInfo, TrackRender } from "./TrackRenderComponent";
-import {
-  getPlaylistsFromDatabase,
-  AddToOrCreatePlaylistFunction,
-  testPlayListsToDatabase
-} from "./PlaylistComponent";
-import {ThunkPlaylistComponent} from './ThunkPlaylistComponent';
+import { ThunkPlaylistComponent } from "./ThunkPlaylistComponent";
 
 
-const token = accessToken;
-
-// Axios call fetch release radar full track list from Spotify
+// Axios call to fetch release radar full track list from Spotify
 const callReleaseRadarFuction = async (releaseRadarCode) => {
   try {
     const releaseRadarAPICall = await axios.get(
       `https://api.spotify.com/v1/playlists/${releaseRadarCode}`, // hardcoded release rader playlist - can make dynamic
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       }
     );
 
-    // returns all track as an array
+    // returns all tracks as an array
     return releaseRadarAPICall.data.tracks.items;
   } catch (error) {
     console.log(error);
@@ -35,8 +25,6 @@ const callReleaseRadarFuction = async (releaseRadarCode) => {
 
 // formats data from release radar API request into an object
 const formatNewTracksAsObjectFunction = (releaseRadarTracks) => {
-
-  
   return releaseRadarTracks.map((item) => {
     let artist2;
     // if track cites only one artist
@@ -73,11 +61,11 @@ const formatNewTracksAsObjectFunction = (releaseRadarTracks) => {
       albumImage: albumImage,
     };
 
-  
     return simpleRadarObject;
   });
 };
 
+// input = array of tracks added to backend. Output = server endpoint response to indicate tracks were added to database 
 const sendRadarTracksToBackEndFunction = async (
   releaseRadarTracksAsSimpleObject
 ) => {
@@ -98,10 +86,6 @@ const sendRadarTracksToBackEndFunction = async (
         },
       }
     );
-    // console.log(
-    //   "axiosPost.data.arrayOfUniqueTracks",
-    //   axiosPost.data.arrayOfUniqueTracks
-    // );
 
     const arrayOfUniqueTracksFromBackendEnpointResponse =
       axiosPost.data.arrayOfUniqueTracks;
@@ -118,8 +102,6 @@ const ReleaseRaderAPICallFunction = ({ mongoCode }) => {
     []
   );
   const [stillLoading, setStillLoading] = useState(true);
-  const [moreInfoOfEachTrack, setMoreInfoOfEachTrack] = useState([]);
-  const [platlistButton, setPlatlistButton ] = useState(false)
 
   useEffect(() => {
     (async () => {
@@ -133,8 +115,8 @@ const ReleaseRaderAPICallFunction = ({ mongoCode }) => {
         returningSimpleRadarObject
       );
 
-      
       setArrayOfUniqueTracksAsState(sendSimpleObjectToBackEnd);
+
       setStillLoading(false);
     })();
   }, []);
@@ -145,9 +127,9 @@ const ReleaseRaderAPICallFunction = ({ mongoCode }) => {
     return (
       <React.Fragment>
         <div>New Tracks are here</div>
-        {/* <TrackRender arrayOfUniqueTracksAsState={arrayOfUniqueTracksAsState} /> */}
-        {/* <AddToOrCreatePlaylistFunction arrayOfUniqueTracksAsState={arrayOfUniqueTracksAsState} /> */}
-       <ThunkPlaylistComponent arrayOfUniqueTracksAsState={arrayOfUniqueTracksAsState}  />
+        <ThunkPlaylistComponent
+          arrayOfUniqueTracksAsState={arrayOfUniqueTracksAsState}
+        />
       </React.Fragment>
     );
   } else if (

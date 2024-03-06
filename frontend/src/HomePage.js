@@ -5,7 +5,6 @@ import ReleaseRaderAPICallFunction from "./components/ReleaseRadarComponent.js";
 import { RadarCodeFromMongoSliceThunk, PlaylistsFfromMongoSliceThunk } from "./redux/thunks";
 import { accessToken, getClientID, getURI } from "./accessTokenManagement.js";
 import axios from "axios";
-
 import './styles.css';
 
 
@@ -41,12 +40,7 @@ import './styles.css';
 export const Homepage = () => {
   const dispatch = useDispatch();
 
-
-
-
   const { status, mongoCode } = useSelector((store) => store.mongoDBThunk);
- 
-
 
   useEffect(() => {
     (async () => {

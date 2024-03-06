@@ -2,8 +2,7 @@ import axios from "axios";
 import { accessToken, getClientID, getURI } from "../accessTokenManagement.js";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { CreatePlaylistComponent } from "./CreatePlaylistComponent";
-import { SecondStageNewPlaylistComponet } from "./SecondStageNewPlaylistComponet";
+import {RenderTracksAndAddToPlaylist} from './RenderTracksAndAddToPlaylist';
 
 // input = array of tracks, output = year and date of most recent tranche of tracks in string form
 const checkDateOfMostRecentTracks = (arrayOfUniqueTracksAsState) => {
@@ -121,6 +120,7 @@ const sendPlaylistDetailsToBackEnd = async (name, id, description) => {
 };
 
 export const ThunkPlaylistComponent = ({ arrayOfUniqueTracksAsState }) => {
+
   const [playlistData, setPlaylistData] = useState([]);
   const [stillLoading, setStillLoading] = useState(true);
   const [newPlaylistID, setNewPlaylistID] = useState(false);
@@ -165,15 +165,16 @@ export const ThunkPlaylistComponent = ({ arrayOfUniqueTracksAsState }) => {
     return (
       <>
         <div>ThunkPlaylistComponent called - playlist ID is {playlistData}</div>
+        <RenderTracksAndAddToPlaylist arrayOfUniqueTracksAsState={arrayOfUniqueTracksAsState} playlistID={playlistData} />
       </>
     );
   } else if (!stillLoading && !playlistData) {
     return (
       <>
         <div>
-          ThunkPlaylistComponent called - new playlist created, it's{" "}
-          {newPlaylistID}
+          ThunkPlaylistComponent called - new playlist created, it's {newPlaylistID}
         </div>
+        <RenderTracksAndAddToPlaylist arrayOfUniqueTracksAsState={arrayOfUniqueTracksAsState} playlistID={newPlaylistID} />
       </>
     );
   }
