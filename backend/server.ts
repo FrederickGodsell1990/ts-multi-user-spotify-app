@@ -72,6 +72,13 @@ app.post("/sign_up", async (req: Request, res: Response) => {
   } = await req.body;
   // indicates that the post request is a first time sign up
 
+console.log('body',Client_ID,
+  Redirect_URI,
+  Release_Radar_code,
+  Username,
+  signup,
+  Client_Secret)
+
   if (
     Username &&
     Client_ID &&

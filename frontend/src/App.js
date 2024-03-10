@@ -52,7 +52,10 @@ function App() {
             <Router>
               <Routes>
                 <Route path="/" element={<Homepage />} />
-
+                <Route
+                path="/account_creation_successful"
+                element={<AccountCreationSuccessful />}
+              />
                 <Route path="/test_page" element={<Testpage />} />
               </Routes>
             </Router>

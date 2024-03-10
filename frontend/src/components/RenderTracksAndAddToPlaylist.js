@@ -60,7 +60,7 @@ const TrackRenderMoreInfo = ({ trackID, album, albumReleaseDate }) => {
   }
 };
 
-// CHANGE THIS SO THAT IT RETURNS A SUCCESS SIGNAL, WHICH CHANGES STATE, THEN RENDERS SAYING IT'S DONE!
+
 // input = playlist ID and list of tracks to add. Output = none but adds tracks to playlist - 
 async function addTracksToSpotifyPlaylist(playlistID, renderList) {
   const arrayOfTrackIDsFormattedForAdding = renderList.map(
@@ -113,10 +113,6 @@ export const RenderTracksAndAddToPlaylist = ({
     );
     setReRenderState(arrayOfUniqueTracksAsState.length);
   }, []);
-
-  // useEffect(() => {}, [reRenderState]);
-
-  // useEffect(() => {}, [playlistID]);
 
   // input = playlist currently being rendered + trackID of track being removed. Not output but sets the renderList variable
   // as the exact same renderList array less the track being removed. function inside functional component so setState can be used

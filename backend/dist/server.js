@@ -60,6 +60,7 @@ exports.app.post("/frontend_data_to_server", (req, res) => __awaiter(void 0, voi
 exports.app.post("/sign_up", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { Client_ID, Redirect_URI, Release_Radar_code, Username, signup, Client_Secret, } = yield req.body;
     // indicates that the post request is a first time sign up
+    console.log('body', Client_ID, Redirect_URI, Release_Radar_code, Username, signup, Client_Secret);
     if (Username &&
         Client_ID &&
         Redirect_URI &&
