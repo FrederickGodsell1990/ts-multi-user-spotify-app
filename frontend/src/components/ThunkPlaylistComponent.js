@@ -164,16 +164,17 @@ export const ThunkPlaylistComponent = ({ arrayOfUniqueTracksAsState }) => {
   } else if (!stillLoading && playlistData) {
     return (
       <>
-        <div>ThunkPlaylistComponent called - playlist ID is {playlistData}</div>
+
+        {/* <div>ThunkPlaylistComponent called - playlist ID is {playlistData}</div> */}
         <RenderTracksAndAddToPlaylist arrayOfUniqueTracksAsState={arrayOfUniqueTracksAsState} playlistID={playlistData} />
       </>
     );
   } else if (!stillLoading && !playlistData) {
     return (
       <>
-        <div>
+        {/* <div>
           ThunkPlaylistComponent called - new playlist created, it's {newPlaylistID}
-        </div>
+        </div> */}
         <RenderTracksAndAddToPlaylist arrayOfUniqueTracksAsState={arrayOfUniqueTracksAsState} playlistID={newPlaylistID} />
       </>
     );

@@ -1,14 +1,14 @@
 import { NavBar } from "./navBar";
-import React, { useEffect} from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import ReleaseRaderAPICallFunction from "./components/ReleaseRadarComponent.js";
-import { RadarCodeFromMongoSliceThunk, PlaylistsFfromMongoSliceThunk } from "./redux/thunks";
+import {
+  RadarCodeFromMongoSliceThunk,
+  PlaylistsFfromMongoSliceThunk,
+} from "./redux/thunks";
 import { accessToken, getClientID, getURI } from "./accessTokenManagement.js";
 import axios from "axios";
-import './styles.css';
-
-
-
+import "./styles.css";
 
 // const sendPlaylistDetailsToBackEnd = async () => {
 //   const body = {
@@ -47,23 +47,21 @@ export const Homepage = () => {
       // call thunk to get release radar code for given user
       dispatch(RadarCodeFromMongoSliceThunk());
       // call playlist thunk
-      dispatch(PlaylistsFfromMongoSliceThunk())
+      dispatch(PlaylistsFfromMongoSliceThunk());
     })();
   }, []);
 
   return (
     <>
       <NavBar />
+  
+        {/* <div className="main-header"> New tracks from Release Radar</div> */}
+        {status === "succeeded" ? (
+          <>
+            <ReleaseRaderAPICallFunction mongoCode={mongoCode} />
+          </>
+        ) : null}
 
-      <div className="main-header"> New tracks from Release Radar</div>
-      {status === "succeeded" ? (
-        <>
-        <ReleaseRaderAPICallFunction mongoCode={mongoCode} />
-       {/* <button onClick={sendPlaylistDetailsToBackEnd}>Test playlist</button> */}
-
-        </>
-      ) : null}
-      
     </>
   );
 };

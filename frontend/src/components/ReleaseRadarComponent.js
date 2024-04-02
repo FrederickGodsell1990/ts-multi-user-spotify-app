@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { accessToken, getClientID, getURI } from "../accessTokenManagement.js";
+import { accessToken, getClientID, getURI, logout } from "../accessTokenManagement.js";
 import { ThunkPlaylistComponent } from "./ThunkPlaylistComponent";
-
 
 // Axios call to fetch release radar full track list from Spotify
 const callReleaseRadarFuction = async (releaseRadarCode) => {
   try {
     const releaseRadarAPICall = await axios.get(
-      `https://api.spotify.com/v1/playlists/${releaseRadarCode}`, // hardcoded release rader playlist - can make dynamic
+      `https://api.spotify.com/v1/playlists/${releaseRadarCode}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -25,6 +24,10 @@ const callReleaseRadarFuction = async (releaseRadarCode) => {
 
 // formats data from release radar API request into an object
 const formatNewTracksAsObjectFunction = (releaseRadarTracks) => {
+  if (!releaseRadarTracks) {
+    return;
+  }
+
   return releaseRadarTracks.map((item) => {
     let artist2;
     // if track cites only one artist
@@ -65,7 +68,7 @@ const formatNewTracksAsObjectFunction = (releaseRadarTracks) => {
   });
 };
 
-// input = array of tracks added to backend. Output = server endpoint response to indicate tracks were added to database 
+// input = array of tracks added to backend. Output = server endpoint response to indicate tracks were added to database
 const sendRadarTracksToBackEndFunction = async (
   releaseRadarTracksAsSimpleObject
 ) => {
@@ -121,27 +124,49 @@ const ReleaseRaderAPICallFunction = ({ mongoCode }) => {
     })();
   }, []);
 
-  if (stillLoading === true) {
-    return <div>still loading</div>;
-  } else if (stillLoading === false && arrayOfUniqueTracksAsState.length > 0) {
-    return (
-      <React.Fragment>
-        <div>New Tracks are here</div>
-        <ThunkPlaylistComponent
-          arrayOfUniqueTracksAsState={arrayOfUniqueTracksAsState}
-        />
-      </React.Fragment>
-    );
-  } else if (
-    stillLoading === false &&
-    arrayOfUniqueTracksAsState.length === 0
-  ) {
-    return (
-      <>
-        <div> No new tracks </div>;
-      </>
-    );
-  }
+  return (
+    <>
+      {stillLoading === true && (
+        <div
+          className="d-flex justify-content-center align-items-center default-container-spacing"
+          style={{ minHeight: "80vh" }}
+        >
+          <div class="spinner-border text-secondary" role="status"></div>
+        </div>
+      )}
+
+      {stillLoading === false && arrayOfUniqueTracksAsState.length === 0 && (
+        <div
+          className="d-flex justify-content-center align-items-center default-container-spacing"
+          style={{ minHeight: "80vh" }}
+        >
+          <div className="default-container-flexbox default-container-colour rounded shadow">
+            <h4 className="subheading default-container-spacing">
+              No new tracks
+            </h4>
+            <p className="text-muted standard-text default-container-spacing">
+              Your Release Radar refreshes every Thursday night at midnight.
+            </p>
+            <p className="text-muted standard-text">
+              Check back then to see the latest releases
+            </p>
+            <button
+             className="btn btn-secondary default-container-spacing shadow"
+             onClick={logout}
+            >Logout</button>
+          </div>
+        </div>
+      )}
+
+      {stillLoading === false && arrayOfUniqueTracksAsState.length > 0 && (
+        <React.Fragment>
+          <ThunkPlaylistComponent
+            arrayOfUniqueTracksAsState={arrayOfUniqueTracksAsState}
+          />
+        </React.Fragment>
+      )}
+    </>
+  );
 };
 
 export default ReleaseRaderAPICallFunction;

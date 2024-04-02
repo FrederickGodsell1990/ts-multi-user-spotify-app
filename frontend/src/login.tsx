@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
+import "./styles.css";
 
 let LOGIN_URI;
 let SIGN_UP_URI;
@@ -59,226 +60,417 @@ function Login() {
     setShowSignUpCarousel(!showSignUpCarousel);
   };
 
+  const ProgressBar = ({ progress }) => {
+    console.log(progress);
+
+
+    return (
+      <div className="progress default-container-spacing ">
+        <div
+          className="progress-bar bg-secondary"
+          role="progressbar"
+          aria-valuenow={progress}
+          aria-valuemin={0}
+          aria-valuemax={220}
+          style={{ width: `${progress}%` }} 
+        ></div>
+      </div>
+    );
+  };
+
+  const BackToLoginComponent = () => {
+    return (
+      <button className="btn lighter-btn shadow" onClick={toggleSignUpCarousel}>
+        Back to login
+      </button>
+    );
+  };
+
+  const refreshPage = () => {
+    window.location.reload();
+  };
+
   return (
-    <div>
+    <div className="default-container-flexbox" style={{ minHeight: "100vh" }}>
       {showSignUpCarousel ? (
         <>
-          <div className="RegisterAccount">
-            Login New - CarouselWithForms
-            {/* <form method="POST" action="http://localhost:3333/log_in"> */}
-            <form method="POST" action={LOGIN_URI}>
-              <input
-                type="text"
-                placeholder="Username"
-                name="Username"
-                onChange={(e) => {
-                  setUsername(e.target.value);
-                }}
-              />
-              <input
-                type="text"
-                placeholder="Client_ID"
-                name="Client_ID"
-                onChange={(e) => {
-                  setClientSecret(e.target.value);
-                }}
-              />
-
-              <button type="submit">Login in new</button>
-            </form>
-          </div>
-          <button onClick={toggleSignUpCarousel}>
-            {" "}
-            No account? Sign up here
-          </button>
-        </>
-      ) : (
-        <>
-          <div
-            id="carouselExampleFade"
-            className="carousel slide carousel-fade"
-            data-bs-ride="carousel"
-          >
-            <div className="carousel-inner">
-              <div
-                className={`carousel-item ${
-                  currentSlide === 0 ? "active" : ""
-                }`}
-              >
-                <div>
-                  1, Go to your desktop Spotify app and hover over the icon the
-                  top right corner. This will reveal your Spotify username.
-                  Please make a note of this. You will need it to log in to your
-                  app.
-                </div>
-                <form onSubmit={handleFormSubmit}>
-                  <h2>Username</h2>
+          <div>
+            <div className="RegisterAccount default-container-colour rounded default-container-spacing shadow">
+              <div className="container default-container-flexbox default-container-spacing">
+                <h6 className="subheading default-container-spacing">
+                  Log in to discover new releases curated just for you!
+                </h6>
+                <form
+                  method="POST"
+                  action={LOGIN_URI}
+                  className="default-container-spacing"
+                >
                   <input
+                    className="default-container-spacing rounded"
                     type="text"
-                    onChange={handleUsername}
-                    placeholder="Enter Username"
-                    style={{ width: "400px" }}
+                    placeholder="Username"
+                    name="Username"
+                    onChange={(e) => {
+                      setUsername(e.target.value);
+                    }}
                   />
-                  <button type="submit" className="btn btn-primary">
-                    Submit
+                  <input
+                    className="rounded"
+                    type="text"
+                    placeholder="Client_ID"
+                    name="Client_ID"
+                    onChange={(e) => {
+                      setClientSecret(e.target.value);
+                    }}
+                  />
+
+                  <button
+                    className="btn btn-secondary default-container-spacing  shadow"
+                    type="submit"
+                  >
+                    Login
                   </button>
                 </form>
-              </div>
-              <div
-                className={`carousel-item ${
-                  currentSlide === 1 ? "active" : ""
-                }`}
-              >
-                <div>
-                  Click on the icon in the top right corner, and then on
-                  'Account' option. In the window that pops up, scroll down to
-                  the bottom and click the 'Developers' option under the
-                  'Communities' subheading. Now click the 'Log in' option in the
-                  top right hand corner. Once logged in, you should see you
-                  Spotify username in the top right corner. Click on it and
-                  choose the 'Dashboard' option. Now click on the 'Create app'
-                  to the right of the page. In the 'App name' field, type your
-                  Spotify username and then 'Release Radar App', for example
-                  'Frederick's Release Radar App', then copy and paste that same
-                  text in to the 'App description' field. You can leave the
-                  'Website' field blank. Now enter
-                  'http://localhost:3333/spotify_login_callback' into the
-                  'Redirect URI' fieldm making sure to not inlcude the inverted
-                  commas. Check the 'Web API' box in the 'Which API/SDKs are you
-                  planning to use?' section, then agree to terms and conditions
-                  and click 'Save'. You've now created your Spotify app!
-                </div>
-                <div>
-                  Now within your app, click 'Settings' at the top right of the
-                  page, scroll to the bottom and click 'Edit'. Now paste
-                  'https://multi-user-spotify-app-staging-8f4f927e5f00.herokuapp.com/spotify_login_callback'
-                  in to the 'Redirect URIs' field, again not including the
-                  inverted commas. Do not remove the existing URI. Now click
-                  'Add' to the right of the bar, then scroll to the bottom and
-                  click 'Save'. You can now copy your 'Client ID'. Make sure you
-                  make a note of this. It will serve as your password for the
-                  app. Please now paste it in to the box below{" "}
-                </div>
-
-                <form onSubmit={handleFormSubmit}>
-                  <h2>Form 1</h2>
-
-                  <input
-                    type="text"
-                    value={Client_ID}
-                    onChange={handleClientID}
-                    placeholder="Enter Client ID"
-                    style={{ width: "400px" }}
-                  />
-                  <button type="submit" className="btn btn-primary">
-                    Submit
-                  </button>
-                </form>
-              </div>
-              <div
-                className={`carousel-item ${
-                  currentSlide === 2 ? "active" : ""
-                }`}
-              >
-                <div>
-                  On the same page click the 'View client secret' option. It
-                  will reveal your client secret. Please copy and paste it in to
-                  the box below{" "}
-                </div>
-                <form onSubmit={handleFormSubmit}>
-                  <h2>Form 3</h2>
-                  <input
-                    type="text"
-                    onChange={handleClientSecret}
-                    placeholder="Enter Client Secret"
-                    style={{ width: "400px" }}
-                  />
-                  <button type="submit" className="btn btn-primary">
-                    Submit
-                  </button>
-                </form>
-              </div>
-              <div
-                className={`carousel-item ${
-                  currentSlide === 3 ? "active" : ""
-                }`}
-              >
-                <div>
-                  In your Spotify desktop app - where you initially found your
-                  Spotify username - type in 'Release Radar' in to the search
-                  function, then click on the thumbnail. Now click on the three
-                  horizontal dots. In the dropdow options, click 'Share' and
-                  then click 'Copy link to playlist'. You should see a link
-                  similar to
-                  https://open.spotify.com/playlist/37i9dQZEVXbftpojYxNDUm?si=88ca37a6614f4c60.
-                  Now copy the serial code between the forward slash and the
-                  question mark and paste it in to the box below. In the given
-                  example the serial code is '37i9dQZEVXbftpojYxNDUm'
-                </div>
-                <form onSubmit={handleFormSubmit}>
-                  <h2>Form 4</h2>
-                  <input
-                    type="text"
-                    onChange={handleReleaseRadarCode} // Call 'handleInputChange' function when input value changes
-                    placeholder="Enter Release Radar Code"
-                    style={{ width: "400px" }}
-                  />
-                  <button type="submit" className="btn btn-primary">
-                    Submit
-                  </button>
-                </form>
-              </div>
-
-              <div
-                className={`carousel-item ${
-                  currentSlide === 4 ? "active" : ""
-                }`}
-              >
-                {Client_ID &&
-                Release_Radar_code &&
-                Username &&
-                Client_Secret ? (
-                  <>
-                    <div>
-                      Please verify your details and if correct, click 'Sign up'
-                    </div>
-                    <form onSubmit={handleFormSubmit}>
-                      <h2>Form 5</h2>
-                      <div>Client_ID is {Client_ID}</div>
-                      <div>Release_Radar_code is {Release_Radar_code}</div>
-                      <div>Username is {Username}</div>
-                      <div>Client_Secret is {Client_Secret}</div>
-                    </form>
-
-                    <form method="POST" action={SIGN_UP_URI}>
-                      <input type="hidden" name="Client_ID" value={Client_ID} />
-                      <input
-                        type="hidden"
-                        name="Redirect_URI"
-                        value={Redirect_URI}
-                      />
-                      <input
-                        type="hidden"
-                        name="Release_Radar_code"
-                        value={Release_Radar_code}
-                      />
-                      <input type="hidden" name="Username" value={Username} />
-                      <input
-                        type="hidden"
-                        name="Client_Secret"
-                        value={Client_Secret}
-                      />
-                      <input type="hidden" name="signup" value={signup} />
-                      <button type="submit">Sign up</button>
-                    </form>
-                  </>
-                ) : (
-                  <div>A field is missing</div>
-                )}
+                <button
+                  className="btn lighter-btn default-container-spacing  shadow"
+                  onClick={toggleSignUpCarousel}
+                >
+                  {" "}
+                  No account? Sign up here
+                </button>
               </div>
             </div>
           </div>
-          <button onClick={toggleSignUpCarousel}>Back to login</button>
+        </>
+      ) : (
+        <>
+          <div className="default-container-colour default-container-flexbox default-container-spacing shadow rounded">
+            <div
+              id="carouselExampleFade"
+              className="carousel slide carousel-fade"
+              data-bs-ride="carousel"
+            >
+              <div className="carousel-inner default-container-spacing">
+                <div
+                  className={`carousel-item ${
+                    currentSlide === 0 ? "active" : ""
+                  } `}
+                >
+                  <form onSubmit={handleFormSubmit}>
+                    <h4 className="subheading ">Username</h4>
+                    <hr />
+                    <div className="text-muted standard-text">
+                      <p>
+                        Go to your desktop Spotify app and click on the icon in
+                        the top right corner, then on the 'Account' option.
+                      </p>
+
+                      <p>
+                        In the window that pops up, scroll down to the bottom
+                        and click the 'Developers' option under the
+                        'Communities' subheading. Now click the 'Log in' option
+                        in the top right hand corner.
+                      </p>
+
+                      <p>
+                        Once logged in, click on the icon containing your
+                        username in the top right corner and choose the
+                        'Dashboard' option. Now click on the 'Create app' to the
+                        right of the page.
+                      </p>
+                      <p>
+                        Now at the top right of the page should see an icon
+                        containing your Spotify username. Please copy and paste
+                        it in to the box below, then click submit.
+                      </p>
+                    </div>
+
+                    <hr />
+                    <input
+                      className="default-container-spacing rounded"
+                      type="text"
+                      onChange={handleUsername}
+                      placeholder="Enter Username"
+                      style={{ width: "400px" }}
+                    />
+                    <button
+                      type="submit"
+                      className="btn btn-secondary default-container-spacing shadow"
+                    >
+                      Submit
+                    </button>
+                  </form>
+                  <ProgressBar progress={10} />
+                  <div className="default-container-flexbox">
+                    <BackToLoginComponent />
+                  </div>
+                </div>
+
+                <div
+                  className={`carousel-item ${
+                    currentSlide === 1 ? "active" : ""
+                  }`}
+                >
+                  <h4 className="subheading ">App set up</h4>
+                  <hr />
+                  <div className="text-muted standard-text">
+                    <p>
+                      Back in the Developer Dashboard, in the 'App name' field,
+                      paste your Spotify username and then 'Release Radar App',
+                      for example 'Frederick's Release Radar App', then copy and
+                      paste that same text in to the 'App description' field.
+                      You can leave the 'Website' field blank.
+                    </p>
+
+                    <p>
+                      Now right click on{" "}
+                      <a
+                        href=""
+                        data-bs-toggle="tooltip"
+                        title="http://localhost:3333/spotify_login_callback"
+                      >
+                        this link
+                      </a>{" "}
+                      then click 'Copy link address' and paste the URL into the
+                      'Redirect URI' field. Check the 'Web API' box in the
+                      'Which API/SDKs are you planning to use?' section, then
+                      agree to terms and conditions and click 'Save'. You've now
+                      created your Spotify app!
+                    </p>
+                  </div>
+                  <hr />
+                  <div className="d-flex justify-content-center">
+                    <button
+                      className="btn btn-secondary default-container-spacing shadow"
+                      onClick={handleFormSubmit}
+                    >
+                      Next
+                    </button>
+                  </div>
+                  <ProgressBar progress={20} />
+                  <div className="default-container-flexbox">
+                    <BackToLoginComponent />
+                  </div>
+                </div>
+                <div
+                  className={`carousel-item ${
+                    currentSlide === 2 ? "active" : ""
+                  }`}
+                >
+                  <h4 className="subheading ">Client ID</h4>
+                  <hr />
+                  <div className="text-muted standard-text">
+                    <p>
+                      Now click 'Settings' at the top right, scroll to the
+                      bottom and click 'Edit'. Now right click on{" "}
+                      <a
+                        href=""
+                        data-bs-toggle="tooltip"
+                        title="https://multi-user-spotify-app-staging-8f4f927e5f00.herokuapp.com/spotify_login_callback"
+                      >
+                        this link
+                      </a>{" "}
+                      and click 'Copy link address' then paste the URL in to the
+                      'Redirect URIs' field. Do not remove the existing URI. Now
+                      click 'Add' to the right of the bar, then scroll to the
+                      bottom and click 'Save'.
+                    </p>
+                    <p>
+                      You can now copy your 'Client ID'. Make sure you make a
+                      note of this. It will serve as your password for the app.
+                      Please now paste it in to the box below.{" "}
+                    </p>
+                  </div>
+                  <hr />
+                  <form onSubmit={handleFormSubmit}>
+                    <input
+                      className="default-container-spacing rounded"
+                      type="text"
+                      value={Client_ID}
+                      onChange={handleClientID}
+                      placeholder="Enter Client ID"
+                      style={{ width: "400px" }}
+                    />
+                    <button
+                      type="submit"
+                      className="btn btn-secondary default-container-spacing shadow"
+                    >
+                      Submit
+                    </button>
+                  </form>
+                  <ProgressBar progress={40} />
+                  <div className="default-container-flexbox">
+                    <BackToLoginComponent />
+                  </div>
+                </div>
+
+                <div
+                  className={`carousel-item ${
+                    currentSlide === 3 ? "active" : ""
+                  }`}
+                >
+                  <h4 className="subheading">Client Secret</h4>
+                  <hr />
+                  <div className="text-muted standard-text">
+                    <p>
+                      On the same page click the 'View client secret' option. It
+                      will reveal your client secret. Please copy and paste it
+                      in to the box.{" "}
+                    </p>
+                  </div>
+                  <hr />
+                  <form onSubmit={handleFormSubmit}>
+                    <input
+                      className="default-container-spacing rounded"
+                      type="text"
+                      onChange={handleClientSecret}
+                      placeholder="Enter Client Secret"
+                      style={{ width: "400px" }}
+                    />
+                    <button
+                      type="submit"
+                      className="btn btn-secondary default-container-spacing shadow"
+                    >
+                      Submit
+                    </button>
+                  </form>
+                  <ProgressBar progress={60} />
+                  <div className="default-container-flexbox">
+                    <BackToLoginComponent />
+                  </div>
+                </div>
+                <div
+                  className={`carousel-item ${
+                    currentSlide === 4 ? "active" : ""
+                  }`}
+                >
+                  <h4 className="subheading">Release Radar Code</h4>
+                  <hr />
+                  <div className="text-muted standard-text">
+                    <p>
+                      In your Spotify desktop app - where you initially found
+                      your Spotify username - type in 'Release Radar' in to the
+                      search function, then click on the thumbnail. Now click on
+                      the three horizontal dots. In the dropdow options, click
+                      'Share' and then click 'Copy link to playlist'. You should
+                      see URL.
+                    </p>
+                    <p>
+                      Now copy the serial code between the forward slash and the
+                      question mark and paste it in to the box below. It should
+                      be a combination of numbers and letters, something similar
+                      to '37i9dQZEVXbftpojYxNDUm'
+                    </p>
+                  </div>
+                  <hr />
+                  <form onSubmit={handleFormSubmit}>
+                    <input
+                      className="default-container-spacing rounded"
+                      type="text"
+                      onChange={handleReleaseRadarCode} // Call 'handleInputChange' function when input value changes
+                      placeholder="Enter Release Radar Code"
+                      style={{ width: "400px" }}
+                    />
+                    <button
+                      type="submit"
+                      className="btn btn-secondary default-container-spacing shadow"
+                    >
+                      Submit
+                    </button>
+                  </form>
+                  <ProgressBar progress={80} />
+                  <div className="default-container-flexbox">
+                    <BackToLoginComponent />
+                  </div>
+                </div>
+
+                <div
+                  className={`carousel-item ${
+                    currentSlide === 5 ? "active" : ""
+                  }
+                  `}
+                >
+                  {Client_ID &&
+                  Release_Radar_code &&
+                  Username &&
+                  Client_Secret ? (
+                    <>
+                      <div className="d-flex">
+                        <form method="POST" action={SIGN_UP_URI}>
+                          <form onSubmit={handleFormSubmit}>
+                            <div className="subheading">
+                              Verify details and sign up
+                            </div>
+                            <hr />
+                            <div className="standard-text text-muted">
+                              <div className="font-weight-bolder">
+                                Username : {Username}
+                              </div>
+                              &nbsp;
+                              <div className="font-weight-bolder ">
+                                Client_ID : {Client_ID}
+                              </div>
+                              &nbsp;
+                              <div className="font-weight-bolder">
+                                Client_Secret : {Client_Secret}
+                              </div>
+                              &nbsp;
+                              <div className="font-weight-bolder">
+                                Release_Radar_code : {Release_Radar_code}
+                              </div>
+                            </div>
+                            <hr />
+                          </form>
+
+                          <input
+                            type="hidden"
+                            name="Client_ID"
+                            value={Client_ID}
+                          />
+                          <input
+                            type="hidden"
+                            name="Redirect_URI"
+                            value={Redirect_URI}
+                          />
+                          <input
+                            type="hidden"
+                            name="Release_Radar_code"
+                            value={Release_Radar_code}
+                          />
+                          <input
+                            type="hidden"
+                            name="Username"
+                            value={Username}
+                          />
+                          <input
+                            type="hidden"
+                            name="Client_Secret"
+                            value={Client_Secret}
+                          />
+                          <input type="hidden" name="signup" value={signup} />
+                          <div className="default-container-flexbox">
+                            <button
+                              className="btn btn-secondary default-container-spacing shadow"
+                              type="submit"
+                            >
+                              Sign up
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </>
+                  ) : (
+                    <button
+                      className="btn btn-secondary default-container-spacing shadow"
+                      onClick={refreshPage}
+                    >
+                      One of more fields are missing - go back to login
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
         </>
       )}
     </div>

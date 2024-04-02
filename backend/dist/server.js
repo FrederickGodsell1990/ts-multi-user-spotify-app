@@ -113,7 +113,8 @@ exports.logInRoute = exports.app.post("/log_in", (req, res) => __awaiter(void 0,
         Client_ID: Client_ID,
     });
     if (userAcccountDetails && userAcccountDetails.Username !== Username) {
-        res.send("Usernames do not match");
+        // res.send("Usernames do not match");
+        res.redirect(`${FRONTEND_URI}/wrong_username`);
     }
     else if (userAcccountDetails &&
         userAcccountDetails.Username === Username) {

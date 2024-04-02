@@ -1,10 +1,62 @@
 .main-header {
-    font-size: 20px;
-    font-weight: bold;
-    
-  }
+  font-size: 20px;
+  font-weight: bold;
+}
+
 
 .nav-bar-header {
-    font-size: 20px;
-    font-weight: bolder;
+  font-size: 20px;
+  font-weight: bolder;
+}
+
+.default-container-flexbox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.default-container-colour {
+  background-color: lightblue;
+}
+
+.default-container-spacing {
+  margin-top: 10px;
+  margin-right: 20px;
+  margin-bottom: 10px;
+  margin-left: 20px;
+}
+
+.subheading {
+  font-size: 26px;
+}
+
+.standard-text {
+  font-size: 18px;
+}
+
+.carousel-item {
+  max-width: 600px; /* Adjust the max-width as needed */
+  margin: 0;
+}
+
+.custom-btn {
+  background-color:#999999 !important; 
+  color: #ffffff  !important;
+}
+
+.full-height-container {
+  min-height: 100vh; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lighter-btn {
+  background-color:#aaaaaa !important; 
+  color: #ffffff  !important;
+}
+
+.scrollable-content {
+  overflow-y: auto ;
 }

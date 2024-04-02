@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { logout, accessToken } from "./accessTokenManagement.js";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
@@ -85,11 +85,12 @@ export const NavBar = () => {
   // console.error('allPlaylists', allPlaylists);
 
   return userDetailsObjectFromStore !== logOutToRest ? (
-    <>
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand " href="#" >
-          <img src={userImageFromStore} width="30" height="30" alt="" />
-          {displayNameFromStore} image and name from redux
+    < React.Fragment >
+      <nav class="navbar navbar-expand-lg default-container-colour">
+       
+        <a class="navbar-brand subheading" >
+          <img className="default-container-spacing rounded-circle" src={userImageFromStore} width="50" height="50" />
+         <span style={{ fontSize: '22px'}}> {displayNameFromStore}'s Release Radar App </span>
         </a>
 
         <button
@@ -101,24 +102,14 @@ export const NavBar = () => {
           aria-expanded="false"
           aria-label="Toggle navigation"
         >
-          <span class="navbar-toggler-icon"></span>
+          <span class="navbar-toggler-icon" ></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav mr-auto">
+        <div class="collapse navbar-collapse"  id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto" className="navbar-nav mr-auto d-flex">
             <li class="nav-item active">
               <a class="nav-link" href="#">
-                Home <span class="sr-only">(current)</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#" onClick={navigateToTestPage}>
-                Test Page
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                Link
+                Home <span class="sr-only"></span>
               </a>
             </li>
             <li class="nav-item dropdown">
@@ -159,12 +150,17 @@ export const NavBar = () => {
             </li>
           </ul>
         </div>
+       
       </nav>
-    </>
+    </React.Fragment>
   ) : (
     // this conditional rendering exists to handle session times out
+    <div className="default-container-flexbox default-container-colour rounded"> 
+    <p>Your session has expired. </p>
+      <p> please logout and log back in.</p>
     <button onClick={logout}>
-      Your session has expired - please logout and log back in
+      Logout
     </button>
+    </div>
   );
 };

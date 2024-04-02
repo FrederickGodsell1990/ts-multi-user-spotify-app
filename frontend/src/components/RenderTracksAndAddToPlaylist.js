@@ -1,39 +1,33 @@
 import React, { useState, useEffect } from "react";
 import { accessToken } from "../accessTokenManagement.js";
 import axios from "axios";
+import "../styles.css";
 
 // input = single track array item - called via map method. Output = retuns a react fragment
-const renderTrackFunction = (trackObject, index) => {
-  const artist = trackObject.artist
-    .split("|")
-    .map((name) => name.replace(/,/g, " & "));
-  const trackName = trackObject.trackName;
+const RenderTrackFunction = ({ trackObject, index }) => {
+  // const artist = trackObject.artist
+  //   .split("|")
+  //   .map((name) => name.replace(/,/g, " & "));
+
   const trackSpotifyID = trackObject.trackSpotifyID;
-  const dateAdded = trackObject.dateAdded;
-  const album = trackObject.album;
-  const albumReleaseDate = trackObject.albumReleaseDate;
 
   return (
     <React.Fragment key={index}>
       <iframe
+        className="default-container-spacing shadow"
         style={{
           borderRadius: "12px",
-          backgroundColor: "rgb(119, 119, 119)",
+          backgroundColor: "rgb(173,216,230)",
         }}
         title={trackSpotifyID}
         src={`https://open.spotify.com/embed/track/${trackSpotifyID}?utm_source=generator`}
-        width="80%"
-        height="250"
+        width="52%"
+        height="200"
         frameBorder="0"
         allowFullScreen=""
         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
         loading="lazy"
       ></iframe>
-      <TrackRenderMoreInfo
-        trackID={trackSpotifyID}
-        album={album}
-        albumReleaseDate={albumReleaseDate}
-      />
     </React.Fragment>
   );
 };
@@ -45,23 +39,36 @@ const TrackRenderMoreInfo = ({ trackID, album, albumReleaseDate }) => {
   if (clicked === false) {
     return (
       <>
-        <button onClick={() => setClicked(true)}>More info?</button>
+        <button
+          className="btn btn-secondary default-container-spacing shadow"
+          onClick={() => setClicked(true)}
+        >
+          More info
+        </button>
       </>
     );
   } else if (clicked === true) {
     return (
       <>
-        <div>Track ID is {trackID}</div>
-        <div>Album {album}</div>
-        <div>Album release date {albumReleaseDate}</div>
-        <button onClick={() => setClicked(false)}>Close</button>
+        <div className="default-container-flexbox default-container-colour rounded  shadow">
+          <p className="default-container-spacing">Track ID : {trackID}</p>
+          <p className="default-container-spacing">Album : {album}</p>
+          <p className="default-container-spacing">
+            Album release date : {albumReleaseDate}
+          </p>
+          <button
+            className="btn btn-secondary default-container-spacing  shadow"
+            onClick={() => setClicked(false)}
+          >
+            Close
+          </button>
+        </div>
       </>
     );
   }
 };
 
-
-// input = playlist ID and list of tracks to add. Output = none but adds tracks to playlist - 
+// input = playlist ID and list of tracks to add. Output = none but adds tracks to playlist -
 async function addTracksToSpotifyPlaylist(playlistID, renderList) {
   const arrayOfTrackIDsFormattedForAdding = renderList.map(
     ({ trackSpotifyID }) => {
@@ -125,45 +132,120 @@ export const RenderTracksAndAddToPlaylist = ({
   };
 
   if (reRenderState === 0) {
-    return <div> No new tracks! </div>;
+    return (
+      <div
+        className="default-container-flexbox default-container-spacing"
+        style={{ minHeight: "80vh" }}
+      >
+        <div className="default-container-flexbox default-container-colour default-container-spacing rounded shadow">
+          {" "}
+          <h4 className="default-container-spacing subheading">
+            No more new tracks
+          </h4>
+          <p className="text-muted standard-text default-container-spacing">
+            Your Release Radar refreshes every Thursday at midnight.
+          </p>
+          <p className="text-muted standard-text">
+            Come back after then to see what's new.
+          </p>
+        </div>
+      </div>
+    );
   }
   if (addedToPlaylist) {
-    return <div>New tracks added to playlist {playlistID}</div>;
+    return (
+      <div
+        className="default-container-flexbox default-container-spacing"
+        style={{ minHeight: "80vh" }}
+      >
+        <div className="default-container-flexbox default-container-colour rounded">
+          <h4 className="default-container-spacing subheading">
+            New tracks sucessfully added!{" "}
+          </h4>
+          <p className="default-container-spacing text-muted standard-text">
+            {" "}
+            All of this week's new tracks from your Release Radar are now
+          </p>
+          <p className="text-muted standard-text">
+            added to a dedicated playlist on your Spotify account
+          </p>
+        </div>
+      </div>
+    );
   }
   if (renderList && reRenderState.length !== 0) {
     return (
-      <React.Fragment>
-        {" "}
-        {renderList.map((trackObject, index) => {
-          const renderedTrack = renderTrackFunction(trackObject, index);
+      <div>
+        <React.Fragment>
+          <div className="default-container-flexbox default-container-spacing">
+            <h4 className="subheading default-container-spacing">
+              Check out all your new releases below{" "}
+            </h4>
+            <p className="text-muted standard-text" >
+              The list of tracks below are those from your Release Radar
+              playlist, which is a playlist curated by Spotify and informed by
+              the tracks and artists your listen to, like and follow. The
+              playlist is updated every week, a process where new tracks replace
+              older tracks. This app allows you capture each track in a
+              dedicated playlist so you don't overlook any new releases. Just
+              hit the button below the app will store them in your Spotify
+              account, catagorised by the month they were added.
+            </p>
+            <button
+              className="btn lighter-btn default-container-spacing shadow"
+              style={{ width: "400px" }}
+              onClick={() => {
+                addTracksToSpotifyPlaylist(playlistID, renderList);
+                setAddedToPlaylist(true);
+              }}
+            >
+              Add all tracks to playlist
+            </button>
+          </div>{" "}
+          <div
+            style={{
+              height: "700px",
+              overflow: "auto",
+            }}
+          >
+            {renderList.map((trackObject, index) => {
+              const trackSpotifyID = trackObject.trackSpotifyID;
+              const albumReleaseDate = trackObject.albumReleaseDate;
+              const album = trackObject.album;
 
-          return (
-            <React.Fragment key={trackObject.trackSpotifyID}>
-              <div>{renderedTrack}</div>
-              <button
-                onClick={() =>
-                  callRemoveTrackFromRenderList(
-                    renderList,
-                    trackObject.trackSpotifyID
-                  )
-                }
-              >
-                Remove track
-              </button>
-            </React.Fragment>
-          );
-        })}
-        &nbsp;
-        <button
-          onClick={() => {
-            addTracksToSpotifyPlaylist(playlistID, renderList);
-            setAddedToPlaylist(true);
-          }}
-        >
-          Add to playlist
-        </button>
-        <div>value of addedToPlaylist = {addedToPlaylist} </div>
-      </React.Fragment>
+              return (
+                <React.Fragment key={trackObject.trackSpotifyID}>
+                  <div className="d-flex flex-row  justify-content-center">
+                    <RenderTrackFunction
+                      trackObject={trackObject}
+                      index={index}
+                    />
+                    <div className="d-flex flex-column align-items-center justify-content-center">
+                      <TrackRenderMoreInfo
+                        trackID={trackSpotifyID}
+                        album={album}
+                        albumReleaseDate={albumReleaseDate}
+                      />
+                      <button
+                        className="btn lighter-btn default-container-spacing  shadow"
+                        onClick={() =>
+                          callRemoveTrackFromRenderList(
+                            renderList,
+                            trackObject.trackSpotifyID
+                          )
+                        }
+                      >
+                        Remove track
+                      </button>
+                    </div>
+                  </div>
+                </React.Fragment>
+              );
+            })}
+          </div>
+          &nbsp;
+        </React.Fragment>
+      </div>
     );
   }
 };

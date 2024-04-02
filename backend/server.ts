@@ -141,7 +141,8 @@ export const logInRoute = app.post(
     });
 
     if (userAcccountDetails && userAcccountDetails.Username !== Username) {
-      res.send("Usernames do not match");
+      // res.send("Usernames do not match");
+      res.redirect(`${FRONTEND_URI}/wrong_username`);
     } else if (
       userAcccountDetails &&
       userAcccountDetails.Username === Username

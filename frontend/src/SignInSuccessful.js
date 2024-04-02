@@ -1,77 +1,89 @@
 import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 
-export const AccountCreationSuccessful = () => {
+const BackToLoginButton = () => {
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
-
-    const navigateToLoginPage = () => {
-        navigate("/");
-      };
+  const navigateToLoginPage = () => {
+    navigate("/");
+  };
 
   return (
+    <button
+      className="btn btn-secondary default-container-spacing shadow"
+      onClick={navigateToLoginPage}
+    >
+      {" "}
+      Back to login page
+    </button>
+  );
+};
+
+export const AccountCreationSuccessful = () => {
+  return (
     <>
-     <div>Account created successfully!</div>;
-     <button onClick={navigateToLoginPage}> To Login page</button>
+      <div className="default-container-flexbox" style={{ minHeight: "100vh" }}>
+        <div className="default-container-flexbox default-container-colour rounded">
+          <h4 className="subheading default-container-spacing">
+            Account created successfully!
+          </h4>
+          <BackToLoginButton />
+        </div>
+      </div>
     </>
-  )
+  );
 };
 
 export const AccountAlreadyExists = () => {
-
-    const navigate = useNavigate();
-
-    const navigateToLoginPage = () => {
-        navigate("/");
-      };
-
   return (
     <>
-     <div>Account already exists</div>;
-     <button onClick={navigateToLoginPage}> To Login page</button>
+      {" "}
+      <div className="default-container-flexbox" style={{ minHeight: "100vh" }}>
+        <div className="default-container-flexbox default-container-colour rounded">
+          <h4 className="subheading default-container-spacing">
+            {" "}
+            Account already exists{" "}
+          </h4>
+          <BackToLoginButton />
+        </div>
+      </div>
     </>
-  )
+  );
 };
 
 export const LoginFailed = () => {
-
-  const navigate = useNavigate();
-
-  const navigateToLoginPage = () => {
-      navigate("/");
-    };
-
-return (
-  <>
-   <div>Login failed - no account exists with those credentials </div>;
-   <button onClick={navigateToLoginPage}> To Login page</button>
-  </>
-)
+  return (
+    <>
+      <div className="default-container-flexbox" style={{ minHeight: "100vh" }}>
+        <div className="default-container-flexbox default-container-colour rounded">
+          <h4 className="subheading default-container-spacing">
+            Login failed{" "}
+          </h4>
+          <p className="text-muted standard-text default-container-spacing">
+            No account exists with those credentials
+          </p>
+          <BackToLoginButton />
+        </div>
+      </div>
+    </>
+  );
 };
 
-export const WrongUsername= () => {
-
-  const navigate = useNavigate();
-
-  const navigateToLoginPage = () => {
-      navigate("/");
-    };
-
-return (
-  <>
-   <div>Login failed - account exists with that client secret but that username does not match </div>;
-   <button onClick={navigateToLoginPage}> To Login page</button>
-  </>
-)
+export const WrongUsername = () => {
+  return (
+    <>
+      <div className="default-container-flexbox" style={{ minHeight: "100vh" }}>
+        <div className="default-container-flexbox default-container-colour rounded">
+          <h4 className="subheading default-container-spacing">
+            Login failed{" "}
+          </h4>
+          <p className="text-muted standard-text default-container-spacing">
+            An account exists with that client secret but that username does not
+            match{" "}
+          </p>
+          <BackToLoginButton />
+        </div>
+      </div>
+    </>
+  );
 };
-
-// export const Homepage = () => {
-
-// return (
-
-//   <>
-//   <div>Homepage</div>
-//   </>
-// )
-
-// }
