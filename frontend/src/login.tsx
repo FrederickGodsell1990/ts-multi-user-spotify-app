@@ -262,7 +262,7 @@ function Login() {
                   <div className="text-muted standard-text">
                    
                     <p>
-                      You can now copy your 'Client ID'. Make sure you make a
+                      Now click the 'Settings' option near the top right of the page. You can now copy your 'Client ID'. Make sure you make a
                       note of this. It will serve as your password for the app.
                       Please now paste it in to the box below.{" "}
                     </p>
