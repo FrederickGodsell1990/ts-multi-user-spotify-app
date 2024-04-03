@@ -225,9 +225,9 @@ function Login() {
                     <p>
                       Now right click on{" "}
                       <a
-                        href=""
+                        href="https://multi-user-spotify-app-staging-8f4f927e5f00.herokuapp.com/spotify_login_callback"
                         data-bs-toggle="tooltip"
-                        title="http://localhost:3333/spotify_login_callback"
+                        title="https://multi-user-spotify-app-staging-8f4f927e5f00.herokuapp.com/spotify_login_callback"
                       >
                         this link
                       </a>{" "}
@@ -260,21 +260,7 @@ function Login() {
                   <h4 className="subheading ">Client ID</h4>
                   <hr />
                   <div className="text-muted standard-text">
-                    <p>
-                      Now click 'Settings' at the top right, scroll to the
-                      bottom and click 'Edit'. Now right click on{" "}
-                      <a
-                        href=""
-                        data-bs-toggle="tooltip"
-                        title="https://multi-user-spotify-app-staging-8f4f927e5f00.herokuapp.com/spotify_login_callback"
-                      >
-                        this link
-                      </a>{" "}
-                      and click 'Copy link address' then paste the URL in to the
-                      'Redirect URIs' field. Do not remove the existing URI. Now
-                      click 'Add' to the right of the bar, then scroll to the
-                      bottom and click 'Save'.
-                    </p>
+                   
                     <p>
                       You can now copy your 'Client ID'. Make sure you make a
                       note of this. It will serve as your password for the app.
