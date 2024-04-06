@@ -148,7 +148,7 @@ const ReleaseRaderAPICallFunction = ({ mongoCode }) => {
               Your Release Radar refreshes every Thursday night at midnight.
             </p>
             <p className="text-muted standard-text">
-              Check back then to see the latest releases
+              Check back then to see the latest releases.
             </p>
             <button
              className="btn btn-secondary default-container-spacing shadow"

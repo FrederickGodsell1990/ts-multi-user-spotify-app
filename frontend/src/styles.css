@@ -60,3 +60,9 @@
 .scrollable-content {
   overflow-y: auto ;
 }
+
+.hr-custom {
+  height: 3px;
+  background-color: #000;
+  border: none;
+}

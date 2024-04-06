@@ -12,10 +12,12 @@ import {
 import { accessToken, logout } from "./accessTokenManagement";
 import { Homepage } from "./HomePage.js";
 import { Testpage } from "./TestPage.js";
+import { AboutPage } from "./AboutPage";
 
 
 import { Provider } from "react-redux";
 import store from "./redux/store";
+
 
 
 function App() {
@@ -58,6 +60,7 @@ function App() {
                 element={<AccountCreationSuccessful />}
               />
                 <Route path="/test_page" element={<Testpage />} />
+                <Route path="/about_page" element={<AboutPage />} />
               </Routes>
             </Router>
           </Provider>

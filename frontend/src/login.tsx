@@ -63,7 +63,6 @@ function Login() {
   const ProgressBar = ({ progress }) => {
     console.log(progress);
 
-
     return (
       <div className="progress default-container-spacing ">
         <div
@@ -72,7 +71,7 @@ function Login() {
           aria-valuenow={progress}
           aria-valuemin={0}
           aria-valuemax={220}
-          style={{ width: `${progress}%` }} 
+          style={{ width: `${progress}%` }}
         ></div>
       </div>
     );
@@ -95,16 +94,18 @@ function Login() {
       {showSignUpCarousel ? (
         <>
           <div>
-            <div className="RegisterAccount default-container-colour rounded default-container-spacing shadow">
+            <div className="RegisterAccount default-container-colour rounded shadow default-container-flexbox">
               <div className="container default-container-flexbox default-container-spacing">
                 <h6 className="subheading default-container-spacing">
-                  Log in to discover new releases curated just for you!
-                </h6>
-                <form
-                  method="POST"
-                  action={LOGIN_URI}
-                  className="default-container-spacing"
-                >
+                  Welcome to the Spotify Release Radar Capture App
+                </h6>{" "}
+                <div style={{ textAlign: 'center' }}>
+                <p className="standard-text default-container-spacing">
+                 If you have an existing Spotify Release Radar Capture App account, you can log in below and start discovering new music. 
+                 These account credentials are specific to this app and seperate from your normal Spotify login details.
+                </p>
+                </div>
+                <form method="POST" action={LOGIN_URI}>
                   <input
                     className="default-container-spacing rounded"
                     type="text"
@@ -131,12 +132,20 @@ function Login() {
                     Login
                   </button>
                 </form>
+                <div className="text-muted standard-text default-container-spacing">
+                  <p>
+                    If you do not have an existing account, please sign up
+                    below. You will need your Spotify desktop app open.{" "}
+                  </p>
+
+                
+                </div>
                 <button
                   className="btn lighter-btn default-container-spacing  shadow"
                   onClick={toggleSignUpCarousel}
                 >
                   {" "}
-                  No account? Sign up here
+                  Sign up
                 </button>
               </div>
             </div>
@@ -260,11 +269,11 @@ function Login() {
                   <h4 className="subheading ">Client ID</h4>
                   <hr />
                   <div className="text-muted standard-text">
-                   
                     <p>
-                      Now click the 'Settings' option near the top right of the page. You can now copy your 'Client ID'. Make sure you make a
-                      note of this. It will serve as your password for the app.
-                      Please now paste it in to the box below.{" "}
+                      Now click the 'Settings' option near the top right of the
+                      page. You can now copy your 'Client ID'. Make sure you
+                      make a note of this. It will serve as your password for
+                      the app. Please now paste it in to the box below.{" "}
                     </p>
                   </div>
                   <hr />
