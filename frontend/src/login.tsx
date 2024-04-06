@@ -450,8 +450,12 @@ function Login() {
                             >
                               Sign up
                             </button>
+                            <div className="">
+                            <BackToLoginComponent />
+                            </div>
                           </div>
                         </form>
+                        
                       </div>
                     </>
                   ) : (

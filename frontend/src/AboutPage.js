@@ -8,7 +8,7 @@ export const AboutPage = () => {
     <div className="default-container-flexbox">
       <div
         className="default-container-flexbox"
-        style={{ minHeight: "110vh", width: "70vh" }}
+        style={{ minHeight: "110vh", width: "90vh" }}
       >
         <div className="default-container-flexbox default-container-colour rounded ">
           <h4 className="subheading default-container-spacing"> About </h4>
