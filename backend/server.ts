@@ -508,7 +508,7 @@ app.get("*", (req, res) => {
 
 export const server = mongoose
   .connect(
-    "mongodb+srv://frederickgodsell:Fs6pIF2Evt64PUs1@multiuserspotifyapp.fxm38gv.mongodb.net/?retryWrites=true&w=majority",
+    "mongodb+srv://frederickgodsell:6Ff0k0G9Vp8t42aJ@typescriptspotifyappsum.n41pcye.mongodb.net/?retryWrites=true&w=majority&appName=TypeScriptSpotifyAppSummer2024",
     {}
   )
   .then((result) => {

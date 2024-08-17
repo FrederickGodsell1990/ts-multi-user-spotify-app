@@ -104,7 +104,7 @@
   
     "include": [
       "**/*.ts"
-    ],
+, "../frontend/__tests__/RenderTracksAndAddToPlaylist.test.ts"    ],
     "exclude": [
       "node_modules"
     ]

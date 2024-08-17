@@ -24,11 +24,20 @@ const callReleaseRadarFuction = async (releaseRadarCode) => {
 
 // formats data from release radar API request into an object
 const formatNewTracksAsObjectFunction = (releaseRadarTracks) => {
+
+console.log('releaseRadarTracks in formatNewTracksAsObjectFunction', releaseRadarTracks)
+
   if (!releaseRadarTracks) {
     return;
   }
 
   return releaseRadarTracks.map((item) => {
+
+    // this added for one weird array item from spotify that had no details in? Left in place just in case
+    if (!item.track) {
+      console.warn('Missing track data for item:', item);
+      return null; // or you could choose to skip this item by returning undefined
+    }
     let artist2;
     // if track cites only one artist
     if (item.track.artists.length === 1) {

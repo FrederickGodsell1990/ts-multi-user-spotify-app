@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import "./styles.css";
 
-let LOGIN_URI;
-let SIGN_UP_URI;
+let LOGIN_URI : any;
+let SIGN_UP_URI : any;
 
 if (process.env.NODE_ENV === "development") {
   LOGIN_URI = "http://localhost:3333/log_in";
@@ -29,27 +29,27 @@ function Login() {
 
   const [showSignUpCarousel, setShowSignUpCarousel] = useState(true);
 
-  const handleClientID = (event) => {
+  const handleClientID = (event : any) => {
     setClientID(event.target.value);
   };
 
-  const handleReleaseRadarCode = (event) => {
+  const handleReleaseRadarCode = (event : any) => {
     setReleaseRadarCode(event.target.value);
   };
 
-  const handleUsername = (event) => {
+  const handleUsername = (event : any) => {
     setUsername(event.target.value);
   };
 
-  const handleClientSecret = (event) => {
+  const handleClientSecret = (event : any) => {
+    setClientSecret(event.target.value );
+  };
+
+  const handleSignUp = (event : any) => {
     setClientSecret(event.target.value);
   };
 
-  const handleSignUp = (event) => {
-    setClientSecret(event.target.value);
-  };
-
-  const handleFormSubmit = (event) => {
+  const handleFormSubmit = (event : any) => {
     event.preventDefault(); // Prevent form submission
     // Advance to the next slide if the form on the current slide is submitted
     setCurrentSlide(currentSlide + 1);
@@ -60,7 +60,7 @@ function Login() {
     setShowSignUpCarousel(!showSignUpCarousel);
   };
 
-  const ProgressBar = ({ progress }) => {
+  const ProgressBar = ({ progress } : any) => {
     console.log(progress);
 
     return (

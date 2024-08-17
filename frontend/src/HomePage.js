@@ -42,6 +42,8 @@ export const Homepage = () => {
 
   const { status, mongoCode } = useSelector((store) => store.mongoDBThunk);
 
+  console.log('mongoCode', mongoCode)
+
   useEffect(() => {
     (async () => {
       // call thunk to get release radar code for given user

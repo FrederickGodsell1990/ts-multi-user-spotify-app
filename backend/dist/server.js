@@ -364,7 +364,7 @@ exports.app.get("*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "../../frontend/build", "index.html"));
 });
 exports.server = mongoose_1.default
-    .connect("mongodb+srv://frederickgodsell:Fs6pIF2Evt64PUs1@multiuserspotifyapp.fxm38gv.mongodb.net/?retryWrites=true&w=majority", {})
+    .connect("mongodb+srv://frederickgodsell:6Ff0k0G9Vp8t42aJ@typescriptspotifyappsum.n41pcye.mongodb.net/?retryWrites=true&w=majority&appName=TypeScriptSpotifyAppSummer2024", {})
     .then((result) => {
     exports.app.listen(exports.port);
     console.log("Mongo listening");

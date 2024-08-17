@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import FavouriteArtistSearch from "./FavouriteArtistSearch.js";
+import React from "react";
 
 export const Testpage = () => {
 
