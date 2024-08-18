@@ -161,7 +161,7 @@ const serverURLFunction = () => {
     ? (URI = "http://localhost:3333")
     : process.env.NODE_ENV === "production"
     ? (URI =
-        "https://multi-user-spotify-app-staging-8f4f927e5f00.herokuapp.com")
+      `${process.env.REACT_APP_FRONTEND_URI}`)
     : (URI = "");
 
     return URI
