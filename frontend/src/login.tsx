@@ -12,9 +12,9 @@ if (process.env.NODE_ENV === "development") {
 if (process.env.NODE_ENV === "production") {
   console.log("i am staproductionging ===", process.env.REACT_APP_ENV);
   LOGIN_URI =
-    "https://multi-user-spotify-app-staging-8f4f927e5f00.herokuapp.com/log_in";
+    `${process.env.FRONTEND_URI}/log_in`;
   SIGN_UP_URI =
-    "https://multi-user-spotify-app-staging-8f4f927e5f00.herokuapp.com/sign_up";
+    `${process.env.FRONTEND_URI}/sign_up`;
 }
 
 function Login() {
