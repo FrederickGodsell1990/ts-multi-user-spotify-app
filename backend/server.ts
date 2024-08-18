@@ -14,6 +14,8 @@ const path = require("path");
 
 const FRONTEND_URI = process.env.FRONTEND_URI;
 const REDIRECT_URI = process.env.REDIRECT_URI;
+const testVar;
+
 
 export const app = express();
 
