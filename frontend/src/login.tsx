@@ -12,9 +12,9 @@ if (process.env.NODE_ENV === "development") {
 if (process.env.NODE_ENV === "production") {
   console.log("i am staproductionging ===", process.env.REACT_APP_ENV);
   LOGIN_URI =
-    `${process.env.FRONTEND_URI}/log_in`;
+    `${process.env.REACT_APP_FRONTEND_URI}/log_in`;
   SIGN_UP_URI =
-    `${process.env.FRONTEND_URI}/sign_up`;
+    `${process.env.REACT_APP_FRONTEND_URI}/sign_up`;
 }
 
 function Login() {
